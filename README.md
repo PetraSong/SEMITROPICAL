@@ -142,9 +142,9 @@ Download and install the latest version of the slideToolkit from GitHub. First c
 mkdir -p ~/git/ && cd ~/git
 ```
 ```
-if [ -d ~/git/slideToolkit/.git ]; then \
-		cd ~/git/slideToolkit && git pull; \
+if [ -d ~/git/slideToolLearn/.git ]; then \
+		cd ~/git/slideToolLearn && git pull; \
 	else \
-		cd ~/git/ && git clone https://github.com/swvanderlaan/slideToolkit.git; \
+		cd ~/git/ && git clone git@github.com:swvanderlaan/slideToolLearn.git; \
 	fi
 ```
