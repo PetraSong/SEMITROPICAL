@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 #
 #
+# References: https://towardsdatascience.com/autoencoders-made-simple-6f59e2ab37ef
+#
 # imports
 import glob
 import shutil
@@ -8,29 +10,40 @@ import os
 import argparse
 import textwrap
 import datetime
-NOWTIME = datetime.datetime.now()
-# print NOWTIME.year, NOWTIME.month, NOWTIME.day, NOWTIME.hour, NOWTIME.minute, NOWTIME.second
-
-# evaluate arguments
-parser = argparse.ArgumentParser(
-    prog='slideProcessor',
-    description='This script processes all images of a given stain from the BULK and puts them in a sequentially numbered series of folders.',
-    usage='slideCopy [-h/--help] -s/--stain STAIN -p/--path PATH',
-    formatter_class=argparse.RawDescriptionHelpFormatter,
-    epilog=textwrap.dedent("Copyright (c) 2018-2019 Sander W. van der Laan | s.w.vanderlaan-2@umcutrecht.nl; Tim G.M. van de Kerkhof | t.g.m.vandekerkhof@umcutrecht.nl."))
-parser.add_argument('-s','--stain', help='Give the name of the stain, e.g. CD34', required=True)
-parser.add_argument('-p','--path', help='Give the full path to where the stain directory resides, e.g. /data/isi/d/dhl/ec/VirtualSlides/AE-SLIDES/', required=True)
-
-
-# References: https://towardsdatascience.com/autoencoders-made-simple-6f59e2ab37ef
-
-
 import keras
 from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
+
+NOWTIME = datetime.datetime.now()
+# print NOWTIME.year, NOWTIME.month, NOWTIME.day, NOWTIME.hour, NOWTIME.minute, NOWTIME.second
+
+# evaluate arguments
+parser = argparse.ArgumentParser(
+    prog='slideAutoEncoder',
+    description='An image autoencoder to learn the features of a slide and reconstruct it.',
+    usage='slideAutoEncoder [-h/--help] -i/--image -p/--path',
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    epilog=textwrap.dedent("Copyright (c) 2018-2019 Sander W. van der Laan | s.w.vanderlaan-2@umcutrecht.nl."))
+parser.add_argument('-i','--image', help='Give the image path, e.g. /data/isi/d/dhl/ec/VirtualSlides/AE-SLIDES/AE123.CD68.TIF', required=True)
+parser.add_argument('-p','--path', help='Give the full path to the directory where the images should be saved, e.g. /data/isi/d/dhl/ec/VirtualSlides/AE-SLIDES/', required=True)
+
+try:
+    args = parser.parse_args()
+  print("We are moving files for stain [" + args.stain + "] in [" + args.path + "].")
+
+except SystemExit:
+    print("\nOh, computer says no! You must supply correct arguments when running a *** slideProcessor ***!\n")
+    parser.print_help()
+    exit()
+
+# globals
+IMAGE = args.image
+PATHS = args.path 
+BASE = PATHS + "/_"
+
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
@@ -78,13 +91,13 @@ model.compile(loss=keras.losses.mean_squared_error,
              metrics = ['accuracy'])
 
 model.fit(x_train,x_train,verbose=1,epochs=10,batch_size=256)
-model.save('C:\\Users\\Rohith\\Documents\\Rohith_Stuff\\Datasets\\auto_en.h5')
+model.save(BASE + 'auto_en.h5')
 #del model
 
 from keras.models import load_model
 import cv2
 
-model = load_model('C:\\Users\\Rohith\\Documents\\Rohith_Stuff\\Datasets\\auto_en.h5')
+model = load_model(BASE + 'auto_en.h5')
 
 test = x_train[1].reshape(1,784)
 y_test = model.predict(test)
