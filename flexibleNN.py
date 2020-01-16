@@ -121,6 +121,6 @@ binary = confusion_matrix(validation_generator.classes,pred)
 target_names = dirlist
 print(classification_report(validation_generator.classes, pred, target_names=target_names))
 
-#plotting and saving a confusion matrix (botched?)
-fig,ax = plot_confusion_matrix(conf_mat=binary,class_names=target_names,figsize=(8,8))
+#plotting and saving a confusion matrix
+fig,ax = plot_confusion_matrix(conf_mat=binary,class_names=target_names)
 plt.savefig(args.confu, bbox_inches='tight')
