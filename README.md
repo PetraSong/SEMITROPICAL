@@ -1,14 +1,14 @@
-# slideToolLearn
+# CONVOCALS
 
-The _slideToolLearn_ script collection is aimed at applying machine or deep learning to high-resolution, histological slide images.
+The _CONVOCALS_ script collection is aimed at applying machine or deep learning to high-resolution, histological slide images.
 
 --------------
 
 #### Installation instructions
 
-Here we explain the dependencies and show instructions on how to install these dependencies. The required dependencies can change and might break your current _slideToolLearn_ installation.
+Here we explain the dependencies and show instructions on how to install these dependencies. The required dependencies can change and might break your current _CONVOCALS_ installation.
 
-We have tested _slideToolLearn_ on macOS Mojave (version 10.14.[x]+); as macOS is UNIX-based, it should work on similar OS architectures, _e.g._ CentOS7.
+We have tested _CONVOCALS_ on macOS Mojave (version 10.14.[x]+); as macOS is UNIX-based, it should work on similar OS architectures, _e.g._ CentOS7.
 
 Please tell us if you run into problems, it is likely we can help you out - we have done this before. ;)
 
@@ -135,7 +135,7 @@ brew install dmtx-utils
 
 The dmtx and libdmtx binairies are installed in `/usr/local/bin`. This is the folder `brew` uses for its installations and should already be in your PATH.
 
-##### Step 8 - Install _slideToolLearn_.
+##### Step 8 - Install _CONVOCALS_.
 Download and install the latest version of the slideToolkit from GitHub. First create and go to the git directory, then download the slideToolkit.
 
 ```
@@ -148,3 +148,18 @@ if [ -d ~/git/slideToolLearn/.git ]; then \
 		cd ~/git/ && git clone git@github.com:swvanderlaan/slideToolLearn.git; \
 	fi
 ```
+
+
+--------------
+
+#### The MIT License (MIT)
+##### Copyright (c) 1979-2020 Sander W. van der Laan | s.w.vanderlaan [at] gmail [dot] com.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:   
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Reference: http://opensource.org.
+
