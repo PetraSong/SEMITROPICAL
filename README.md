@@ -45,3 +45,19 @@ Please refer to the vignette on [reproducing a WORCS project]() for step by step
 <!-- If your project deviates from the steps outlined in the vignette on     -->
 <!-- reproducing a WORCS project, please provide your own advice for         -->
 <!-- readers here.                                                           -->
+
+#### Changes log
+
+    Version:      v1.0.0
+    Last update:  2021-07-15
+    Written by:   Sander W. van der Laan (s.w.vanderlaan-2[at]umcutrecht.nl).
+    Description:  CONVOCALS repository: classification of atherosclerotic histological whole-slide images
+    Minimum requirements: R version 3.4.3 (2017-06-30) -- 'Single Candle', Mac OS X El Capitan
+    
+    Changes log
+    * v1.0.0 Initial version. 
+    
+    
+--------------
+
+##### Copyright (c) 1979-2021 Sander W. van der Laan | s.w.vanderlaan [at] gmail [dot] com.
