@@ -84,7 +84,7 @@ In this notebook we create a baseline table of the whole cohort and of the CEA-c
 
 # Athero-Express Biobank Study
 
-The [*Athero-Express Biobank Study (AE)*](http://www.atheroexpress.nl){target="_blank"} contains plaque material of patients that underwent endarterectomyat two Dutch tertiary referral centers. Details of the study design were described before. Briefly, blood and plaque material were obtained during endarterectomy and stored at -80 ℃. Only carotid endarterectomy (CEA) patients were included in the present study. All patients provided informed consent and the study was approved by the medical ethics committee.
+The [*Athero-Express Biobank Study (AE)*](https://doi.org/10.1007/s10564-004-2304-6){target="_blank"} contains plaque material of patients that underwent endarterectomyat two Dutch tertiary referral centers. Details of the study design were described before. Briefly, blood and plaque material were obtained during endarterectomy and stored at -80 ℃. Only carotid endarterectomy (CEA) patients were included in the present study. All patients provided informed consent and the study was approved by the medical ethics committee.
 
 
 ## Load data
@@ -117,7 +117,8 @@ require(haven)
 # AEDB <- haven::read_sav(paste0(AEDB_loc, "/2020_1_NEW_AtheroExpressDatabase_ScientificAE_30-09-2020.sav")) # duplicate studynumbers in it
 # AEDB <- haven::read_sav(paste0(AEDB_loc, "/2020_1_NEW_AtheroExpressDatabase_ScientificAE_16-03-2020.sav"))
 # AEDB <- haven::read_sav(paste0(AEDB_loc, "/2022_1_NEW_AtheroExpressDatabase_ScientificAE_15-02-2022.sav"))
-AEDB <- haven::read_sav(paste0(AEDB_loc, "/2022_3_NEW_AtheroExpressDatabase_ScientificAE_27-09-2022.sav"))
+# AEDB <- haven::read_sav(paste0(AEDB_loc, "/2022_3_NEW_AtheroExpressDatabase_ScientificAE_27-09-2022.sav"))
+AEDB <- haven::read_sav(paste0(AEDB_loc, "/2022_3_NEW_AtheroExpressDatabase_ScientificAE_withNewSymptoms_10-10-2022.sav"))
 
 # writing off the SPSS data to an Excel.
 # fwrite(AEdata, file = paste0(INP_loc,"/2017-1NEW_AtheroExpressDatabase_ScientificAE_20171306_v1.0.values.xlsx"), 
@@ -269,86 +270,86 @@ table(AEDB$AsymptSympt2G,
 # rm(AEDB.temp)
 ```
 
-<!-- ### Re-assessed symptoms -->
+### Re-assessed symptoms
 
-<!-- We re-assessed the categorization of symptoms. These are summarized and parsed -->
-<!-- in this section. -->
+We re-assessed the categorization of symptoms. These are summarized and parsed
+in this section.
 
-<!-- Labeling of new symptom categories. -->
+Labeling of new symptom categories.
 
-<!-- ```{r message=FALSE, warning=FALSE, paged.print=TRUE} -->
+```{r message=FALSE, warning=FALSE, paged.print=TRUE}
 
-<!-- AEDB$indexsymptoms_worst -->
-<!-- AEDB$indexsymptoms_worst_4g -->
-<!-- AEDB$indexsymptoms_latest -->
-<!-- AEDB$indexsymptoms_latest_4g -->
+AEDB$indexsymptoms_worst
+AEDB$indexsymptoms_worst_4g
+AEDB$indexsymptoms_latest
+AEDB$indexsymptoms_latest_4g
 
-<!-- ``` -->
+```
 
-<!-- Getting counts for each of the most important categories. -->
+Getting counts for each of the most important categories.
 
-<!-- ```{r} -->
-<!-- cat("New 'worst' vs 'latest' symptom categories.\n") -->
-<!-- table(as_factor(AEDB$indexsymptoms_worst_4g), as_factor(AEDB$indexsymptoms_latest_4g)) -->
+```{r}
+cat("New 'worst' vs 'latest' symptom categories.\n")
+table(as_factor(AEDB$indexsymptoms_worst_4g), as_factor(AEDB$indexsymptoms_latest_4g))
 
-<!-- cat("\nNew 'worst' symptom categories.\n") -->
-<!-- table((AEDB$indexsymptoms_worst_4g)) -->
+cat("\nNew 'worst' symptom categories.\n")
+table((AEDB$indexsymptoms_worst_4g))
 
-<!-- cat("\nNew 'latest' symptom categories.\n") -->
-<!-- table(as_factor(AEDB$indexsymptoms_latest_4g)) -->
-<!-- ``` -->
+cat("\nNew 'latest' symptom categories.\n")
+table(as_factor(AEDB$indexsymptoms_latest_4g))
+```
 
-<!-- Comparing with the original symptom categories. -->
+Comparing with the original symptom categories.
 
-<!-- ```{r} -->
-<!-- cat("New 'latest' vs original symptom 2G categories.\n") -->
-<!-- table((AEDB$indexsymptoms_latest_4g), AEDB$AsymptSympt2G) -->
+```{r}
+cat("New 'latest' vs original symptom 2G categories.\n")
+table((AEDB$indexsymptoms_latest_4g), AEDB$AsymptSympt2G)
 
-<!-- cat("\nNew 'latest' vs original symptom 5G categories.\n") -->
-<!-- table((AEDB$indexsymptoms_latest_4g), AEDB$Symptoms.5G) -->
+cat("\nNew 'latest' vs original symptom 5G categories.\n")
+table((AEDB$indexsymptoms_latest_4g), AEDB$Symptoms.5G)
 
-<!-- ``` -->
+```
 
-<!-- We need to be very strict in defining *symptoms.* Therefore we will fix a new -->
-<!-- variable that groups *symptoms* at inclusion. -->
+We need to be very strict in defining *symptoms.* Therefore we will fix a new
+variable that groups *symptoms* at inclusion.
 
-<!-- Coding of *symptoms* is as follows: -->
+Coding of *symptoms* is as follows:
 
-<!-- -   asympt 0\ -->
-<!-- -   ocular 1\ -->
-<!-- -   TIA 2\ -->
-<!-- -   stroke 3\ -->
-<!-- -   unclear 9 -->
+-   asympt 0\
+-   ocular 1\
+-   TIA 2\
+-   stroke 3\
+-   unclear 9
 
-<!-- We will group as follows: -->
+We will group as follows:
 
-<!-- 1.  Asymptomatic > 0 -->
-<!-- 2.  Symptomatic > 1, 2, 3 -->
-<!-- 3.  NA > 9 -->
+1.  Asymptomatic > 0
+2.  Symptomatic > 1, 2, 3
+3.  NA > 9
 
-<!-- ```{r FixNewSymptoms} -->
+```{r FixNewSymptoms}
 
-<!-- # Fix symptoms -->
-<!-- attach(AEDB) -->
+# Fix symptoms
+attach(AEDB)
 
-<!-- # Symptoms.Update2G -->
-<!-- AEDB[,"Symptoms.Update2G"] <- NA -->
-<!-- AEDB$Symptoms.Update2G[indexsymptoms_latest_4g == 0] <- "Asymptomatic" -->
-<!-- AEDB$Symptoms.Update2G[indexsymptoms_latest_4g == 1 | indexsymptoms_latest_4g == 2 | indexsymptoms_latest_4g == 3] <- "Symptomatic" -->
-<!-- AEDB$Symptoms.Update2G[indexsymptoms_latest_4g == 9 ] <- NA -->
+# Symptoms.Update2G
+AEDB[,"Symptoms.Update2G"] <- NA
+AEDB$Symptoms.Update2G[indexsymptoms_latest_4g == 0] <- "Asymptomatic"
+AEDB$Symptoms.Update2G[indexsymptoms_latest_4g == 1 | indexsymptoms_latest_4g == 2 | indexsymptoms_latest_4g == 3] <- "Symptomatic"
+AEDB$Symptoms.Update2G[indexsymptoms_latest_4g == 9 ] <- NA
 
-<!-- # Symptoms.Update3G -->
-<!-- AEDB[,"Symptoms.Update3G"] <- NA -->
-<!-- AEDB$Symptoms.Update3G[indexsymptoms_latest_4g == 0] <- "Asymptomatic" -->
-<!-- AEDB$Symptoms.Update3G[indexsymptoms_latest_4g == 1 | indexsymptoms_latest_4g == 2 | indexsymptoms_latest_4g == 3] <- "Symptomatic" -->
-<!-- AEDB$Symptoms.Update3G[indexsymptoms_latest_4g == 9 ] <- "Unclear" -->
+# Symptoms.Update3G
+AEDB[,"Symptoms.Update3G"] <- NA
+AEDB$Symptoms.Update3G[indexsymptoms_latest_4g == 0] <- "Asymptomatic"
+AEDB$Symptoms.Update3G[indexsymptoms_latest_4g == 1 | indexsymptoms_latest_4g == 2 | indexsymptoms_latest_4g == 3] <- "Symptomatic"
+AEDB$Symptoms.Update3G[indexsymptoms_latest_4g == 9 ] <- "Unclear"
 
-<!-- detach(AEDB) -->
+detach(AEDB)
 
-<!-- table(AEDB$Symptoms.Update2G, AEDB$Symptoms.5G, useNA = "ifany") -->
-<!-- table(AEDB$Symptoms.Update3G, AEDB$Symptoms.5G, useNA = "ifany") -->
+table(AEDB$Symptoms.Update2G, AEDB$Symptoms.5G, useNA = "ifany")
+table(AEDB$Symptoms.Update3G, AEDB$Symptoms.5G, useNA = "ifany")
 
-<!-- ``` -->
+```
 
 ### Other clinical characteristics
 
@@ -813,7 +814,7 @@ table(AEDB$Plaque_Vulnerability_Index, useNA = "ifany")
 
 ```
 
-## Fix target
+## Fix biomarker
 
 ```{r IRNT Target}
 AEDB$PCSK9_plasma <- as.numeric(AEDB$PCSK9_plasma) 
@@ -889,7 +890,6 @@ We are interested in the following variables at baseline.
 -   stenosis
 -   year of surgery
 -   plaque characteristics
--   target variable(s)
 
 ```{r Baseline AEDB: preparation}
 cat("====================================================================================================\n")
@@ -1197,32 +1197,112 @@ Let's save the baseline characteristics of the Athero-Express Biobank Study.
 
 require(openxlsx)
 
-write.xlsx(as.data.frame(AEDB.tableOne), 
-           file = paste0(BASELINE_loc, "/",Today,".",PROJECTNAME,".AE.BaselineTable.xlsx"), 
-           rowNames = TRUE, 
-           colNames = TRUE, 
-           sheetName = "AE_Base", overwrite = TRUE)
+openxlsx::write.xlsx(as.data.frame(AEDB.tableOne), 
+                     file = paste0(BASELINE_loc, "/",Today,".",PROJECTNAME,".AE.BaselineTable.xlsx"), 
+                     rowNames = TRUE, 
+                     colNames = TRUE, 
+                     sheetName = "AE_Base", overwrite = TRUE)
 
-write.xlsx(as.data.frame(AEDB.CEA.tableOne), 
-           file = paste0(BASELINE_loc, "/",Today,".",PROJECTNAME,".AE.CEA.BaselineTable.xlsx"), 
-           rowNames = TRUE, 
-           colNames = TRUE, 
-           sheetName = "AE_Base_CEA", overwrite = TRUE)
+openxlsx::write.xlsx(as.data.frame(AEDB.CEA.tableOne), 
+                     file = paste0(BASELINE_loc, "/",Today,".",PROJECTNAME,".AE.CEA.BaselineTable.xlsx"), 
+                     rowNames = TRUE, 
+                     colNames = TRUE, 
+                     sheetName = "AE_Base_CEA", overwrite = TRUE)
 
-write.xlsx(as.data.frame(AEDB.CEA.tableOne), 
-           file = paste0(BASELINE_loc, "/",Today,".",PROJECTNAME,".AE.CEA.Sex.BaselineTable.xlsx"), 
-           rowNames = TRUE, 
-           colNames = TRUE, 
-           sheetName = "AE_Base_CEA_sex", overwrite = TRUE)
+openxlsx::write.xlsx(as.data.frame(AEDB.CEA.Sex.tableOne), 
+                     file = paste0(BASELINE_loc, "/",Today,".",PROJECTNAME,".AE.CEA.Sex.BaselineTable.xlsx"), 
+                     rowNames = TRUE, 
+                     colNames = TRUE, 
+                     sheetName = "AE_Base_CEA_sex", overwrite = TRUE)
 
 ```
 
 We will also write the newly prepared AEDB selected for this study which we can use in downstream analyses. 
 
 ```{r}
-saveRDS(AEDB.CEA, file = paste0(OUT_loc, "/",Today,".",PROJECTNAME,".AEDB.CEA.RDS"))
-saveRDS(AEDB.full, file = paste0(OUT_loc, "/",Today,".",PROJECTNAME,".AEDB.FULL.RDS"))
 saveRDS(AEDB, file = paste0(OUT_loc, "/",Today,".",PROJECTNAME,".AEDB.raw.RDS"))
+saveRDS(AEDB.full, file = paste0(OUT_loc, "/",Today,".",PROJECTNAME,".AEDB.FULL.RDS"))
+saveRDS(AEDB.CEA, file = paste0(OUT_loc, "/",Today,".",PROJECTNAME,".AEDB.CEA.RDS"))
+
+```
+
+
+## ExpressScan - CONVOCALS sample list
+
+Here we create the CONVOCALS sample list to match/cross reference with the whole-slide images. This includes:
+
+- sampleID = STUDY_NUMBER
+- gender 
+
+```{r}
+
+CONVOCALS.samplelist.withduplicates <- subset(AEDB.CEA, select = 
+                                                c("STUDY_NUMBER", "UPID", "informedconsent", "Hospital", 
+                                                  "Artery_summary", "arteryop", 
+                                                  "Gender", "Age", 
+                                                  "sympt", "AsymptSympt", "AsymptSympt2G",  "Symptoms.5G", 
+                                                  "indexsymptoms_latest_4g", "Symptoms.Update2G", "Symptoms.Update3G") # new symptom-categories
+                                              )
+
+CONVOCALS.samplelist.withduplicates$arteryop <- to_factor(CONVOCALS.samplelist.withduplicates$arteryop)
+
+DT::datatable(CONVOCALS.samplelist.withduplicates)
+
+```
+
+### Samples vs. individuals
+
+The AE is using `STUDY_NUMBER` to mark each _individual sample_, but `UPID` numbers are used for each _individual patient_. The latter is important for studies involving, for example genetic data, or in this case predictions. 
+
+Here we assess how many UPIDs there are in the sample-list and how many of these are 'duplicate', _i.e._ how many patients had multiple surgeries. Next, we randomly select one of each 'multiple' UPID.
+
+The general flow is: 
+
+* Select samples and store in a dataset `CONVOCALS.samplelist.withduplicates`
+* Randomly select 1 sample from `CONVOCALS.samplelist.withduplicates` based on UPIDs
+* Create new dataset `CONVOCALS.samplelist`
+
+```{r}
+# what is the damage?
+
+n_occur1 <- as.data.frame(table(CONVOCALS.samplelist.withduplicates$UPID))
+dim(n_occur1)
+n_occur1a <- n_occur1[n_occur1$Freq>1,]
+rm(n_occur1)
+n_occur1a
+
+# function to filter
+# reference: https://stackoverflow.com/questions/23084509/function-for-sampling-between-duplicated-values-in-data-frame
+# this is not randomly picking one sample
+# filter_data <- function(DATA){
+#   distinct_points <- unique(DATA$UPID)
+#   as.data.frame(t(sapply(distinct_points, function(x){subset(DATA, UPID == x)[1,]})))
+# }
+# 
+# CONVOCALS.samplelist <- filter_data(CONVOCALS.samplelist.withduplicates)
+
+# Reference: https://stackoverflow.com/questions/45804730/randomly-remove-duplicated-rows-using-dplyr
+
+library(dplyr)
+set.seed(9192202)
+CONVOCALS.samplelist <- CONVOCALS.samplelist.withduplicates %>% 
+  group_by(UPID) %>%
+  sample_n(1)
+
+
+```
+
+
+```{r}
+
+fwrite(CONVOCALS.samplelist,
+       file = paste0(OUT_loc, "/", Today, ".CONVOCALS.samplelist.csv"),
+       quote = TRUE,
+       sep = ",",
+       na = "NA",
+       row.names = FALSE,
+       col.names = TRUE,
+       showProgress = TRUE)
 
 ```
 
@@ -1231,8 +1311,8 @@ saveRDS(AEDB, file = paste0(OUT_loc, "/",Today,".",PROJECTNAME,".AEDB.raw.RDS"))
 
 ------------------------------------------------------------------------------------------------------------------------
 
-    Version:      v1.0.2
-    Last update:  2022-10-04
+    Version:      v1.0.3
+    Last update:  2022-10-11
     Written by:   Sander W. van der Laan (s.w.vanderlaan-2[at]umcutrecht.nl).
     Description:  Script to get some Athero-Express Biobank Study baseline characteristics.
     Minimum requirements: R version 3.4.3 (2017-06-30) -- 'Single Candle', Mac OS X El Capitan
@@ -1248,6 +1328,7 @@ saveRDS(AEDB, file = paste0(OUT_loc, "/",Today,".",PROJECTNAME,".AEDB.raw.RDS"))
     _W_
 
     **Changes log**
+    * v1.0.3 Updated AE database. Added function to randomly select multiplicate UPIDs.
     * v1.0.2 Simplified the initial script. It now outputs the relevant R-objects (as .RDS).
     * v1.0.1 Update to main AEDB (there is an error in the Age-variable in the new version).
     * v1.0.0 Initial version. Add 'plaque vulnerability index', Fixed baseline table, added codes, and results. Major update to WORCS system.
