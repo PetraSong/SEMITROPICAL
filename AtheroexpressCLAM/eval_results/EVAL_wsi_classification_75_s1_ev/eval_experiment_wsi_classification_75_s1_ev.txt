@@ -1,0 +1,1 @@
+{'task': 'wsi_classification', 'split': 'test', 'save_dir': './eval_results/EVAL_wsi_classification_75_s1_ev', 'models_dir': 'results/wsi_classification_75_1_s1', 'model_type': 'clam_sb', 'drop_out': True, 'model_size': 'small'}

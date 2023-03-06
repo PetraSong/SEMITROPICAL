@@ -1,0 +1,17 @@
+case_id,slide_id,label
+0,patient_2,slide_02,subtype_4
+1,patient_6,slide_16,subtype_2
+2,patient_7,slide_07,subtype_3
+3,patient_2,slide_12,subtype_4
+4,patient_9,slide_09,subtype_3
+5,patient_5,slide_15,subtype_3
+6,patient_1,slide_01,subtype_2
+7,patient_5,slide_05,subtype_2
+8,patient_8,slide_08,subtype_1
+9,patient_4,slide_14,subtype_2
+10,patient_3,slide_13,subtype_2
+11,patient_3,slide_03,subtype_2
+12,patient_6,slide_06,subtype_1
+13,patient_0,slide_10,subtype_3
+14,patient_1,slide_11,subtype_4
+15,patient_4,slide_04,subtype_2
