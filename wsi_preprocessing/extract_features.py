@@ -7,8 +7,8 @@ import glob
 import openslide
 import math
 from segmentation_utils import get_coords_h5
-from segmentation_utils import save_hdf5, extract_multi_view
-from model import FeaturesExtraction
+from segmentation_utils import save_hdf5
+from model import FeaturesExtraction, FeaturesExtraction_IMAGENET
 from dataset import Tiles_Bag
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
@@ -36,7 +36,7 @@ def get_args_parser():
 
 
     # FEATURES FILES SAVE DIR
-    parser.add_argument('-output_dir', type=str, default="/hpc/dhl_ec/fcisternino/ATHEROEXPRESS_PROCESSED/features_512/", help='path to features .h5/.pt storage')
+    parser.add_argument('-output_dir', type=str, default="/hpc/dhl_ec/fcisternino/ATHEROEXPRESS_PROCESSED/features_imagenet/", help='path to features .h5/.pt storage')
 
 
     # FEATURES EXTRACTION CHECKPOINT
@@ -68,7 +68,7 @@ def extract_features(args, chunk):
     DEVICE = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
     # === FEATURES EXTRACTION MODEL === #
-    features_extraction_class = FeaturesExtraction(args)
+    features_extraction_class = FeaturesExtraction_IMAGENET(args)
     features_extraction = features_extraction_class.model
     features_extraction.eval()
     features_extraction.to(DEVICE)
@@ -116,48 +116,36 @@ def extract_features(args, chunk):
         coords = get_coords_h5(h5_file)
 
         dataset = Tiles_Bag(slide=slide, tile_size = args.tile_size, transform=transform, h5=h5_file)
-        loader = DataLoader(dataset = dataset, batch_size = 1, num_workers=2)
+        loader = DataLoader(dataset = dataset, batch_size = 200, num_workers=4)
     
         mode = 'w'
+        f = torch.empty(0, 1000)
+        c = torch.empty(0,2)
+        op = os.path.join(features_dir_h5 , slidename_noext + '.h5')
         for tile, coords in loader:
             col, row = coords
-      #      img_256, img_512, img_1024 = extract_multi_view(slide, (col, row), tile_size=tile_size)
-      #      img_256 = transform(img_256).unsqueeze(0)
-      #      img_512 = transform(img_512).unsqueeze(0)
-      #      img_1024 = transform(img_1024).unsqueeze(0)
-      #      multi_view_input = torch.concat((img_256, img_512, img_1024), dim = 0).unsqueeze(0).to(DEVICE)
+            # extract features
             features = features_extraction_class.extractFeatures(tile, device=DEVICE)
+            c = torch.cat((c, torch.concat((col.unsqueeze(0), row.unsqueeze(0)), dim=0).T))
+            f = torch.cat((f, torch.from_numpy(features)))
 
-     #      cls_token = features[:, 0]
-     #       features_v1 = np.mean(features[:, 1: 1+64], axis=1)
-     #       features_v2 = np.mean(features[:, 65: 65+64], axis=1)
-     #       features_v3 = np.mean(features[:, 129: 129+64], axis=1)
-     #       asset_dict = {'features_cls': cls_token, 'features_v1': features_v1,
-     #                   'features_v2': features_v2, 'features_v3': features_v3, 
-     #                   'coords':  np.array([[int(col), int(row)]])}
+        features = f
+        coords = c
+        with h5py.File(op, 'w') as fi:
+            # Store arrays in HDF5 file with specified names
+            fi.create_dataset('coords', data=coords.numpy())
+            fi.create_dataset('features', data=features.numpy())
             
-            asset_dict = {'features': features, 'coords':  np.array([[int(col), int(row)]])}
-            output_path = os.path.join(temp_dir, slidename_noext + '.h5')
-            save_hdf5(output_path, asset_dict, attr_dict= None, mode=mode)
-
-            mode = 'a'
-            
-        file = h5py.File(output_path, "r")
-        
-        features = file['features'][:]
-        torch.save(torch.from_numpy(np.array(features)), os.path.join(temp_dir , slidename_noext + '.pt'))
-
+        torch.save(features, os.path.join(features_dir_pt , slidename_noext + f'.pt'))
         end = datetime.datetime.now()
 
-        print(f'Time required: {end - start}', flush=True)
-
-        shutil.move(os.path.join(temp_dir, slidename_noext + '.h5'), os.path.join(features_dir_h5 , slidename_noext + '.h5'))
-        shutil.move(os.path.join(temp_dir, slidename_noext + '.pt'), os.path.join(features_dir_pt , slidename_noext + '.pt'))                            
+        print(f'Time required: {end - start}, shape: {features.shape}', flush=True)
+                       
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser('features-extraction', parents=[get_args_parser()])
     args = parser.parse_args()
-    files = glob.glob(os.path.join(args.slide_folder, '_tif/*.TIF')) + glob.glob(os.path.join(args.slide_folder, '_ndpi/*.ndpi'))
+    files = glob.glob(os.path.join(args.slide_folder, '_tif/_images/*.TIF')) + glob.glob(os.path.join(args.slide_folder, '_ndpi/_images/*.ndpi'))
 
     num_tasks = int(args.num_tasks)
     i = int(args.index)
