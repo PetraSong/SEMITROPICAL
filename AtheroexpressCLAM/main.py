@@ -77,13 +77,13 @@ parser = argparse.ArgumentParser(description='Configurations for WSI Training')
 # data_root_dir => see files organization in README.md
 parser.add_argument('--data_root_dir', type=str, default="../GTEX_FEATURES_DINO", 
                     help='data directory')
-parser.add_argument('--max_epochs', type=int, default=20,
+parser.add_argument('--max_epochs', type=int, default=200,
                     help='maximum number of epochs to train (default: 200)')
 parser.add_argument('--lr', type=float, default=1e-4,
                     help='learning rate (default: 0.0001)')
 parser.add_argument('--label_frac', type=float, default=1.0,
                     help='fraction of training labels (default: 1.0)')
-parser.add_argument('--reg', type=float, default=1e-5,
+parser.add_argument('--reg', type=float, default=1e-3,
                     help='weight decay (default: 1e-5)')
 ## ???
 parser.add_argument('--seed', type=int, default=1, 
@@ -196,7 +196,7 @@ elif args.task == 'wsi_classification':
                                             ignore=[])
 
 elif args.task == 'wsi_classification_binary':
-    args.n_classes = 1
+    args.n_classes = 2
     dataset = Generic_MIL_Dataset(csv_path='./dataset_csv/AtheroExpress_WSI_dataset_binary.csv',
                                             data_dir=os.path.join(args.data_root_dir, ''),
                                             shuffle=False,
