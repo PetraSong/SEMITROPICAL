@@ -334,11 +334,6 @@ class Generic_MIL_Dataset(Generic_WSI_Classification_Dataset):
 
 	def __getitem__(self, idx):
 
-		### MODIFICATION ###
-	#	print('***** Francesco **** : USE H5 is ', self.use_h5)
-	#	print('***** Francesco **** : data dir -> ', self.data_dir)
-
-		### END MODIFICATION ###
 		slide_id = self.slide_data['slide_id'][idx]
 		label = self.slide_data['label'][idx]
 		if type(self.data_dir) == dict:
@@ -347,7 +342,6 @@ class Generic_MIL_Dataset(Generic_WSI_Classification_Dataset):
 		else:
 			data_dir = self.data_dir
 		self.use_h5 = True	
-	#	print('***** Francesco **** : USE H5 is ', self.use_h5)
 		if not self.use_h5:
 			if self.data_dir:
 				full_path = os.path.join(data_dir, 'pt_files', '{}.pt'.format(slide_id))
@@ -364,10 +358,20 @@ class Generic_MIL_Dataset(Generic_WSI_Classification_Dataset):
 				coords = hdf5_file['coords'][:]
 
 			features = torch.from_numpy(features)
-			#if self.train_mode:
-			#	print('augmentation')
-			#	features = bag_augmentation(features)
+			if self.train_mode:
+				
+				#num_rows_to_keep = np.random.randint(int(features.shape[0] * 0.6), int(features.shape[0]*1.0))
+				# Generate a random permutation of the row indices
+				#row_indices = torch.randperm(features.shape[0])
+				
+				# Select the first num_rows_to_keep rows from the permuted indices
+				#selected_indices = row_indices[:num_rows_to_keep]
 
+				# Keep only the selected rows
+				#features = features[selected_indices, :]
+
+				features = bag_augmentation(features)
+		
 			return features, label, coords
 
 
