@@ -4,11 +4,13 @@ from utils.utils import *
 import os
 from datasets.dataset_generic import save_splits
 from models.model_mil import MIL_fc, MIL_fc_mc
-from models.model_clam import CLAM_MB, CLAM_SB
+from models.model_clam_sum import CLAM_MB, CLAM_SB
 from sklearn.preprocessing import label_binarize
 from sklearn.metrics import roc_auc_score, roc_curve
 from sklearn.metrics import auc as calc_auc
 import torchvision
+from torch.optim.lr_scheduler import ReduceLROnPlateau
+
 
 class Accuracy_Logger(object):
     """Accuracy logger"""
@@ -49,7 +51,7 @@ class Accuracy_Logger(object):
 
 class EarlyStopping:
     """Early stops the training if validation loss doesn't improve after a given patience."""
-    def __init__(self, patience=30, stop_epoch=20, verbose=False):
+    def __init__(self, patience=20, stop_epoch=20, verbose=False):
         """
         Args:
             patience (int): How long to wait after last time validation loss improved.
@@ -65,30 +67,33 @@ class EarlyStopping:
         self.best_score = None
         self.early_stop = False
         self.val_loss_min = np.Inf
+        self.tot_acc_min =np.Inf
 
-    def __call__(self, epoch, val_loss, model, ckpt_name = 'checkpoint.pt'):
+    def __call__(self, epoch, val_loss, tot_acc, model, ckpt_name = 'checkpoint.pt'):
 
         score = -val_loss
+        score2 = tot_acc
 
         if self.best_score is None:
-            self.best_score = score
-            self.save_checkpoint(val_loss, model, ckpt_name)
-        elif score < self.best_score:
+            self.best_score = score2
+            self.save_checkpoint(val_loss, tot_acc, model, ckpt_name)
+        elif score2 < self.best_score:
             self.counter += 1
             print(f'EarlyStopping counter: {self.counter} out of {self.patience}')
             if self.counter >= self.patience and epoch > self.stop_epoch:
                 self.early_stop = True
         else:
-            self.best_score = score
-            self.save_checkpoint(val_loss, model, ckpt_name)
+            self.best_score = score2
+            self.save_checkpoint(val_loss, tot_acc, model, ckpt_name)
             self.counter = 0
 
-    def save_checkpoint(self, val_loss, model, ckpt_name):
+    def save_checkpoint(self, val_loss, tot_acc, model, ckpt_name):
         '''Saves model when validation loss decrease.'''
         if self.verbose:
-            print(f'Validation loss decreased ({self.val_loss_min:.6f} --> {val_loss:.6f}).  Saving model ...')
+            print(f'Weighted accuracy increased ({self.tot_acc_min:.6f} --> {tot_acc:.6f}).  Saving model ...')
         torch.save(model.state_dict(), ckpt_name)
         self.val_loss_min = val_loss
+        self.tot_acc_min = tot_acc
 
 def train(datasets, cur, args):
     """   
@@ -174,6 +179,8 @@ def train(datasets, cur, args):
     print('Done!')
     
     print('\nInit Loaders...', end=' ')
+    
+    scheduler = ReduceLROnPlateau(optimizer=optimizer, mode='min', factor=0.1, patience=10, verbose=True)
     # Data loaders
     train_loader = get_split_loader(train_split, training=True, testing = args.testing, weighted = args.weighted_sample)
     val_loader = get_split_loader(val_split,  testing = args.testing)
@@ -188,8 +195,8 @@ def train(datasets, cur, args):
     else:
         early_stopping = None
     print('Done!', flush=True)
-    loss_fn = nn.BCELoss()
-    print('Setting weighted BCE Loss...', flush=True)
+    loss_fn = nn.CrossEntropyLoss()
+    print('Setting Cross Entropy Loss...', flush=True)
     
 
 
@@ -203,8 +210,10 @@ def train(datasets, cur, args):
 
         else:
             train_loop(epoch, model, train_loader, optimizer, args.n_classes, writer, loss_fn)
-            stop = validate(cur, epoch, model, val_loader, args.n_classes, 
+            stop, val_loss = validate(cur, epoch, model, val_loader, args.n_classes, 
                 early_stopping, writer, loss_fn, args.results_dir)
+            
+        scheduler.step(val_loss)
         
         if stop: 
             break
@@ -261,8 +270,8 @@ def train_loop_clam(epoch, model, loader, optimizer, n_classes, bag_weight, writ
         # Y_hat is equal to label
         acc_logger.log(Y_hat, label)
         # classification loss
-        loss = loss_fn(logits, label)
-        #breakpoint()
+        loss = loss_fn(Y_prob, label.long())
+
         #labels = torch.nn.functional.one_hot(label, num_classes=2).float()
 
         #loss = focal.sigmoid_focal_loss(logits, labels, reduction = 'mean')
@@ -331,10 +340,9 @@ def train_loop(epoch, model, loader, optimizer, n_classes, writer = None, loss_f
     for batch_idx, (data, label) in enumerate(loader):
         data, label = data.to(device), label.to(device)
         logits, Y_prob, Y_hat, _, _ = model(data)
-
         
         acc_logger.log(Y_hat, label)
-        loss = loss_fn(Y_prob.squeeze(0), label.float())
+        loss = loss_fn(Y_prob, label.long())
         #labels = torch.nn.functional.one_hot(label, num_classes=1).float()
         #loss = focal.sigmoid_focal_loss(logits, labels, reduction = 'sum')
         loss_value = loss.item()
@@ -389,7 +397,7 @@ def validate(cur, epoch, model, loader, n_classes, early_stopping = None, writer
 
             acc_logger.log(Y_hat, label)
             
-            loss = loss_fn(Y_prob.squeeze(0), label)
+            loss = loss_fn(Y_prob, label.long())
 
             prob[batch_idx] = Y_prob.cpu().numpy()
             labels[batch_idx] = label.item()
@@ -417,21 +425,31 @@ def validate(cur, epoch, model, loader, n_classes, early_stopping = None, writer
         writer.add_scalar('val/error', val_error, epoch)
 
     print('\nVal Set, val_loss: {:.4f}, val_error: {:.4f}, auc: {:.4f}'.format(val_loss, val_error, auc))
+
     for i in range(n_classes):
         acc, correct, count = acc_logger.get_summary(i)
         print('class {}: acc {}, correct {}/{}'.format(i, acc, correct, count))
         if writer and acc is not None:
             writer.add_scalar('val/class_{}_acc'.format(i), acc, epoch)
 
+    total_correct = 0
+    total_count = 0
+    for i in range(n_classes):
+        _, correct, count = acc_logger.get_summary(i)
+        total_correct+=correct
+        total_count +=count
+
+    tot_acc = (total_correct/total_count)
+    
     if early_stopping:
         assert results_dir
-        early_stopping(epoch, val_loss, model, ckpt_name = os.path.join(results_dir, "s_{}_checkpoint.pt".format(cur)))
+        early_stopping(epoch, val_loss, tot_acc, model, ckpt_name = os.path.join(results_dir, "s_{}_checkpoint.pt".format(cur)))
         
         if early_stopping.early_stop:
             print("Early stopping")
-            return True
+            return True, val_loss
 
-    return False
+    return False, val_loss
 
 def validate_clam(cur, epoch, model, loader, n_classes, early_stopping = None, writer = None, loss_fn = None, results_dir = None):
     device=torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -454,7 +472,7 @@ def validate_clam(cur, epoch, model, loader, n_classes, early_stopping = None, w
             logits, Y_prob, Y_hat, _, instance_dict = model(data, label=label, instance_eval=True)
             acc_logger.log(Y_hat, label)
             
-            loss = loss_fn(logits, label)
+            loss = loss_fn(Y_prob, label.long())
 
             val_loss += loss.item()
 
@@ -512,11 +530,20 @@ def validate_clam(cur, epoch, model, loader, n_classes, early_stopping = None, w
         
         if writer and acc is not None:
             writer.add_scalar('val/class_{}_acc'.format(i), acc, epoch)
+
+    total_correct = 0
+    total_count = 0
+    for i in range(n_classes):
+        _, correct, count = acc_logger.get_summary(i)
+        total_correct+=correct
+        total_count +=count
+
+    tot_acc = (total_correct/total_count)
      
 
     if early_stopping:
         assert results_dir
-        early_stopping(epoch, val_loss, model, ckpt_name = os.path.join(results_dir, "s_{}_checkpoint.pt".format(cur)))
+        early_stopping(epoch, val_loss, tot_acc, model, ckpt_name = os.path.join(results_dir, "s_{}_checkpoint.pt".format(cur)))
         
         if early_stopping.early_stop:
             print("Early stopping")
