@@ -106,6 +106,7 @@ parser.add_argument('--model_type', type=str, choices=['clam_sb', 'clam_mb', 'mi
                     help='type of model (default: clam_sb, clam w/ single attention branch)')
 parser.add_argument('--exp_code', type=str, help='experiment code for saving results')
 parser.add_argument('--weighted_sample', action='store_true', default=False, help='enable weighted sampling')
+parser.add_argument('--apply_bag_augmentation', action='store_true', default=False, help='enable weighted sampling')
 parser.add_argument('--model_size', type=str, choices=['small', 'big', 'dino_version'], default='dino_version', help='size of model, does not affect mil')
 parser.add_argument('--task', type=str, choices=['task_1_tumor_vs_normal',  'task_2_tumor_subtyping', 'wsi_classification', 'wsi_classification_binary'], default='wsi_classification')
 ### CLAM specific options
@@ -152,6 +153,7 @@ settings = {'num_splits': args.k,
             'model_size': args.model_size,
             "use_drop_out": args.drop_out,
             'weighted_sample': args.weighted_sample,
+            'apply_bag_augmentation': args.apply_bag_augmentation,
             'opt': args.opt}
 
 if args.model_type in ['clam_sb', 'clam_mb']:
@@ -204,6 +206,7 @@ elif args.task == 'wsi_classification_binary':
                                             print_info=True,
                                             label_dict = {'Asymptomatic':0, 'Symptomatic':1},
                                             patient_strat=False,
+                                            apply_bag_augmentation = args.apply_bag_augmentation,
                                             ignore=[])
 
 

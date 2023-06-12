@@ -42,6 +42,7 @@ class Generic_WSI_Classification_Dataset(Dataset):
 		patient_strat=False,
 		label_col = None,
 		patient_voting = 'max',
+		apply_bag_augmentation = None
 		):
 		"""
 		Args:
@@ -62,6 +63,7 @@ class Generic_WSI_Classification_Dataset(Dataset):
 		if not label_col:
 			label_col = 'label'
 		self.label_col = label_col
+		self.apply_bag_augmentation = apply_bag_augmentation
 
 		slide_data = pd.read_csv(csv_path)
 		slide_data = self.filter_df(slide_data, filter_dict)
@@ -195,7 +197,7 @@ class Generic_WSI_Classification_Dataset(Dataset):
 			mask = self.slide_data['slide_id'].isin(split.tolist())
 			df_slice = self.slide_data[mask].reset_index(drop=True)
 			if split_key == 'train':
-				split = Generic_Split(df_slice, data_dir=self.data_dir, num_classes=self.num_classes, train_mode = True)
+				split = Generic_Split(df_slice, data_dir=self.data_dir, num_classes=self.num_classes, train_mode = True, apply_bag_augmentation = self.apply_bag_augmentation)
 			else:
 				split = Generic_Split(df_slice, data_dir=self.data_dir, num_classes=self.num_classes, train_mode = False)
 		else:
@@ -358,7 +360,7 @@ class Generic_MIL_Dataset(Generic_WSI_Classification_Dataset):
 				coords = hdf5_file['coords'][:]
 
 			features = torch.from_numpy(features)
-			if self.train_mode:
+			if self.train_mode and self.apply_bag_augmentation:
 				
 				#num_rows_to_keep = np.random.randint(int(features.shape[0] * 0.6), int(features.shape[0]*1.0))
 				# Generate a random permutation of the row indices
@@ -376,13 +378,14 @@ class Generic_MIL_Dataset(Generic_WSI_Classification_Dataset):
 
 
 class Generic_Split(Generic_MIL_Dataset):
-	def __init__(self, slide_data, data_dir=None, num_classes=2, train_mode = False):
+	def __init__(self, slide_data, data_dir=None, num_classes=2, train_mode = False, apply_bag_augmentation = False):
 		self.use_h5 = False
 		self.slide_data = slide_data
 		self.data_dir = data_dir
 		self.num_classes = num_classes
 		self.slide_cls_ids = [[] for i in range(self.num_classes)]
 		self.train_mode = train_mode
+		self.apply_bag_augmentation = apply_bag_augmentation
 		for i in range(self.num_classes):
 			self.slide_cls_ids[i] = np.where(self.slide_data['label'] == i)[0]
 

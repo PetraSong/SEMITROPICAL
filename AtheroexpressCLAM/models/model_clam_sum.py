@@ -252,7 +252,7 @@ class CLAM_MB(CLAM_SB):
     def __init__(self, gate = True, size_arg = "small", dropout = False, k_sample=8, n_classes=2,
         instance_loss_fn=nn.CrossEntropyLoss(), subtyping=False):
         nn.Module.__init__(self)
-        self.size_dict = {"small": [1024, 512, 256], "big": [1024, 512, 384], "dino_version": [768, 256, 128]}
+        self.size_dict = {"small": [1024, 512, 256], "big": [1024, 512, 384], "dino_version": [1000, 512, 256]}
         size = self.size_dict[size_arg]
         fc = [nn.Linear(size[0], size[1]), nn.ReLU()]
         if dropout:
@@ -283,6 +283,7 @@ class CLAM_MB(CLAM_SB):
         self.instance_loss_fn = instance_loss_fn
         self.n_classes = n_classes
         self.subtyping = subtyping
+        self.features_dropout = nn.Dropout(p=0.1)
         initialize_weights(self)
 
     def forward(self, h, label=None, instance_eval=False, return_features=True, attention_only=False):
@@ -290,6 +291,8 @@ class CLAM_MB(CLAM_SB):
         # The attention net takes as input the patch features h [K, 1024] - where K is the number of patches - and outputs
         # a [K,N_CLASSES] tensor A containing the attention score per each patch and the features [K, 512] reduced by the fc
         # layers
+
+        h = self.features_dropout(h)
         A, h = self.attention_net(h)  # NxK
         A = torch.transpose(A, 1, 0)  # KxN
         if attention_only:
@@ -334,23 +337,26 @@ class CLAM_MB(CLAM_SB):
                 total_inst_loss /= len(self.instance_classifiers)
 
         # multiply the reduced features (512-dim) with the attention scores => result: (N, K) * (K,512) => (N, 512)
-       # M = torch.mm(A, h)
+        # M = torch.mm(A, h)
         # logits [1, N]
         logits = torch.empty(1, self.n_classes).float().to(device)
+        m = []
         for c in range(self.n_classes):
             # logits for class c
-            m = (A[c].unsqueeze * h).sum(0)
-            logits[0, c] = self.classifiers[c](m)
-        # Y_hat: index of the largest logit
-        Y_hat = torch.topk(logits, 1, dim = 1)[1]
-
+            m.append((A[c].unsqueeze(1) * h).sum(0))
+            logits[0, c] = self.classifiers[c](m[c])
         # softmax over logits
         Y_prob = F.softmax(logits, dim = 1)
+
+        Y_hat = torch.topk(logits, 1, dim = 1)[1]
+        #print(f'Y_prob: {Y_prob}', flush=True)
         if instance_eval:
             results_dict = {'instance_loss': total_inst_loss, 'inst_labels': np.array(all_targets), 
             'inst_preds': np.array(all_preds)}
         else:
             results_dict = {}
         if return_features:
-            results_dict.update({'features': M})
+            results_dict.update({'slide_level_embeddings': m, 'attention_scores': A})
+
+
         return logits, Y_prob, Y_hat, A_raw, results_dict
