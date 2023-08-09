@@ -4,12 +4,6 @@
 
 ### Operating System Version
 ### MacBook Pro
-# ROOT_loc = "/Users/swvanderlaan"
-# STORAGE_loc = "/Users/swvanderlaan"
-# CLOUD_loc = "/Users/swvanderlaan/Library/Mobile Documents/com~apple~CloudDocs/"
-# ONEDRIVE_loc = "/Users/swvanderlaan/Library/CloudStorage/OneDrive-UMCUtrecht/Genomics"
-
-### MacBook Air
 ROOT_loc = "/Users/slaan3"
 STORAGE_loc = "/Users/slaan3"
 CLOUD_loc = "/Users/slaan3/Library/Mobile Documents/com~apple~CloudDocs/"
@@ -38,7 +32,7 @@ AERNA_loc = paste0(PLINK_loc, "/_AE_ORIGINALS/AERNA")
 
 ### Project
 # PROJECT_loc = paste0(PLINK_loc, "/analyses/grants/telomeregrant2022")
-PROJECT_loc = paste0(STORAGE_loc, "/git/CirculatoryHealth/CONVOCALS")
+PROJECT_loc = paste0(STORAGE_loc, "/PLINK/analyses/expressscan/Projects/CONVOCALS")
 
 # # use this if there is relevant information here.
 # ifelse(!dir.exists(file.path(PROJECT_loc, "/targets")), 

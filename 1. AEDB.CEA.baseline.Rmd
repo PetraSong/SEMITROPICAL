@@ -114,8 +114,11 @@ cat("* get Athero-Express Biobank Study Database...")
 require(haven)
 
 # AEDB <- haven::read_sav(paste0(AEDB_loc, "/2022_1_NEW_AtheroExpressDatabase_ScientificAE_15-02-2022.sav")) # something wrong with Age-variable
-# AEDB <- haven::read_sav(paste0(AEDB_loc, "/2020_1_NEW_AtheroExpressDatabase_ScientificAE_30-09-2020.sav")) # duplicate studynumbers in it
 # AEDB <- haven::read_sav(paste0(AEDB_loc, "/2020_1_NEW_AtheroExpressDatabase_ScientificAE_16-03-2020.sav"))
+# AEDB <- haven::read_sav(paste0(AEDB_loc, "/2020_1_NEW_AtheroExpressDatabase_ScientificAE_30-09-2020.sav")) # duplicate studynumbers in it
+# AEDB <- haven::read_sav(paste0(AEDB_loc, "/2021_1_NEW_AtheroExpressDatabase_ScientificAE_01-02-2021.sav"))
+# AEDB <- haven::read_sav(paste0(AEDB_loc, "/2021_3_NEW_AtheroExpressDatabase_ScientificAE_10-09-2021.sav"))
+# AEDB <- haven::read_sav(paste0(AEDB_loc, "/2022_1_NEW_AtheroExpressDatabase_ScientificAE_11-02-2022.sav"))
 # AEDB <- haven::read_sav(paste0(AEDB_loc, "/2022_1_NEW_AtheroExpressDatabase_ScientificAE_15-02-2022.sav"))
 # AEDB <- haven::read_sav(paste0(AEDB_loc, "/2022_3_NEW_AtheroExpressDatabase_ScientificAE_27-09-2022.sav"))
 AEDB <- haven::read_sav(paste0(AEDB_loc, "/2022_3_NEW_AtheroExpressDatabase_ScientificAE_withNewSymptoms_10-10-2022.sav"))
@@ -1241,12 +1244,13 @@ CONVOCALS.samplelist.withduplicates <- subset(AEDB.CEA, select =
                                                   "Artery_summary", "arteryop", 
                                                   "Gender", "Age", 
                                                   "sympt", "AsymptSympt", "AsymptSympt2G",  "Symptoms.5G", 
-                                                  "indexsymptoms_latest_4g", "Symptoms.Update2G", "Symptoms.Update3G") # new symptom-categories
+                                                  "indexsymptoms_latest_4g", "Symptoms.Update2G", "Symptoms.Update3G",
+                                                  "IPH.bin") # new symptom-categories
                                               )
 
 CONVOCALS.samplelist.withduplicates$arteryop <- to_factor(CONVOCALS.samplelist.withduplicates$arteryop)
-
-DT::datatable(CONVOCALS.samplelist.withduplicates)
+# library(DT)
+# DT::datatable(CONVOCALS.samplelist.withduplicates)
 
 ```
 
@@ -1307,12 +1311,44 @@ fwrite(CONVOCALS.samplelist,
 ```
 
 
+# Merge with SMA samples
+
+```{r}
+SMA_slides.raw <- fread(paste0(OUT_loc, "/20230809.study_number_only_SMA.csv"))
+SMA_slides.raw[, "Slides" := "SMA"] 
+names(SMA_slides.raw)[names(SMA_slides.raw) == "study_number_only"] <- "STUDY_NUMBER"
+head(SMA_slides.raw)
+library(dplyr)
+library(stringr)
+SMA_slides <- SMA_slides.raw %>% 
+  mutate(across('STUDY_NUMBER', str_replace, 'AE', ''))
+head(SMA_slides)
+rm(SMA_slides.raw)
+```
+
+```{r}
+CONVOCALS.samplelist.SMA <- merge(CONVOCALS.samplelist, SMA_slides, by.x = "STUDY_NUMBER", by.y = "STUDY_NUMBER", all.x = TRUE)
+
+table(CONVOCALS.samplelist.SMA$Slides, useNA = "ifany")
+```
+
+```{r}
+fwrite(subset(CONVOCALS.samplelist.SMA, Slides != "SMA"),
+       file = paste0(OUT_loc, "/", Today, ".CONVOCALS.samplelist.noSMAslides.csv"),
+       quote = TRUE,
+       sep = ",",
+       na = "NA",
+       row.names = FALSE,
+       col.names = TRUE,
+       showProgress = TRUE)
+```
+
 # Session information
 
 ------------------------------------------------------------------------------------------------------------------------
 
-    Version:      v1.0.3
-    Last update:  2022-10-11
+    Version:      v1.0.4
+    Last update:  2023-08-09
     Written by:   Sander W. van der Laan (s.w.vanderlaan-2[at]umcutrecht.nl).
     Description:  Script to get some Athero-Express Biobank Study baseline characteristics.
     Minimum requirements: R version 3.4.3 (2017-06-30) -- 'Single Candle', Mac OS X El Capitan
@@ -1328,6 +1364,7 @@ fwrite(CONVOCALS.samplelist,
     _W_
 
     **Changes log**
+    * v1.0.4 Updated AE database. Output includes IPH. Created list of samples without SMA slides.
     * v1.0.3 Updated AE database. Added function to randomly select multiplicate UPIDs.
     * v1.0.2 Simplified the initial script. It now outputs the relevant R-objects (as .RDS).
     * v1.0.1 Update to main AEDB (there is an error in the Age-variable in the new version).

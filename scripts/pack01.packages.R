@@ -19,11 +19,18 @@ install.packages.auto("naniar")
 # To get 'data.table' with 'fwrite' to be able to directly write gzipped-files
 # Ref: https://stackoverflow.com/questions/42788401/is-possible-to-use-fwrite-from-data-table-with-gzfile
 # install.packages("data.table", repos = "https://Rdatatable.gitlab.io/data.table")
+install.packages.auto("data.table")
+# install.packages("data.table", dependencies = TRUE, force = TRUE)
 library(data.table)
 
 install.packages.auto("tidyverse")
 install.packages.auto("knitr")
 install.packages.auto("DT")
+# needed for eeptools if it doesn't work straightaway
+# install.packages("minqa", dependencies = TRUE, force = TRUE)
+# install.packages("nloptr", dependencies = TRUE, force = TRUE)
+# install.packages("lmtest", dependencies = TRUE, force = TRUE)
+# install.packages("eeptools", dependencies = TRUE, force = TRUE)
 install.packages.auto("eeptools")
 
 install.packages.auto("haven")
@@ -45,4 +52,7 @@ install.packages.auto("UpSetR")
 
 devtools::install_github("thomasp85/patchwork")
 
+# needed for sjPlot if it doesn't work straightaway
+# install.packages("mvtnorm", dependencies = TRUE, force = TRUE)
+# install.packages("sjPlot", dependencies = TRUE, force = TRUE)
 install.packages.auto("sjPlot")
