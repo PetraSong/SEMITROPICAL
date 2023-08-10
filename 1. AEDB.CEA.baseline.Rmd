@@ -1329,11 +1329,16 @@ rm(SMA_slides.raw)
 ```{r}
 CONVOCALS.samplelist.SMA <- merge(CONVOCALS.samplelist, SMA_slides, by.x = "STUDY_NUMBER", by.y = "STUDY_NUMBER", all.x = TRUE)
 
+```
+
+```{r}
 table(CONVOCALS.samplelist.SMA$Slides, useNA = "ifany")
 
 table(CONVOCALS.samplelist.SMA$indexsymptoms_latest_4g, useNA = "ifany")
 
 table(CONVOCALS.samplelist.SMA$Symptoms.Update3G, useNA = "ifany")
+
+table(CONVOCALS.samplelist.SMA$Artery_summary, useNA = "ifany")
 ```
 
 ```{r}
