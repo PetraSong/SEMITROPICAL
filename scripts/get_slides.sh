@@ -33,7 +33,7 @@ VIRTUALSLIDESDIR="/hpc/dhl_ec/VirtualSlides"
 
 STAIN="GLYCC"
 
-for STUDYNUMBER in AE_list2461; do
+for STUDYNUMBER in ${AE_list2461}; do
 
     echo "> Copying slides for study ${STUDYNUMBER} and stain $S{TAIN"
     cp -v ${BULKDIR}/AE-SLIDES/${STAIN}/AE${STUDYNUMBER}* ${VIRTUALSLIDESDIR}/${STAIN}/
