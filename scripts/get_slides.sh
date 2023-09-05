@@ -35,7 +35,7 @@ STAIN="GLYCC"
 
 for STUDYNUMBER in ${AE_list2461}; do
 
-    echo "> Copying slides for study ${STUDYNUMBER} and stain $S{TAIN"
+    echo "> Copying slides for study ${STUDYNUMBER} and stain ${STAIN}"
     cp -v ${BULKDIR}/${STAIN}/AE${STUDYNUMBER}* ${VIRTUALSLIDESDIR}/${STAIN}/
 
 done
