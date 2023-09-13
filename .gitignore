@@ -72,7 +72,7 @@ _gsdata_/
 *.csv
 
 # Results
-_archived
+_archive*
 *.zip
 *.sample
 

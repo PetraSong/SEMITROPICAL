@@ -31,7 +31,7 @@ VIRTUALSLIDESDIR="/hpc/dhl_ec/VirtualSlides"
     # SR_POLARIZED
     # VONWILLEBRANDFACTOR
 
-STAIN="GLYCC"
+STAIN="FIBRIN"
 
 for STUDYNUMBER in ${AE_list2461}; do
 
