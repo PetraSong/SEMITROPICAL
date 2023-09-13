@@ -22,4 +22,4 @@ eval "$(conda shell.bash hook)"
 # mamba activate /hpc/local/Rocky8/dhl_ec/software/mambaforge3/envs/convocals
 mamba activate convocals
 
-python3 segmentation.py -index=$SLURM_ARRAY_TASK_ID -num_tasks=$SLURM_ARRAY_TASK_COUNT --slide_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques" -output_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques/PROCESSED_TEST" -masks_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques/PROCESSED_TEST/masks/"
+python3 /hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/wsi_preprocessing/segmentation.py -index=$SLURM_ARRAY_TASK_ID -num_tasks=$SLURM_ARRAY_TASK_COUNT --slide_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques" -output_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques/PROCESSED_TEST" -masks_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques/PROCESSED_TEST/masks/"
