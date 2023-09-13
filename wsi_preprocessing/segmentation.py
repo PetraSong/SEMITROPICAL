@@ -298,11 +298,17 @@ def segmentation(chunk):
           .format(args.model, checkpoint['epoch']))
 
     net.eval()
+    # You could get the following message:
+    # UserWarning: This DataLoader will create 4 worker processes in total. Our suggested 
+    # max number of worker in current system is 2, which is smaller than what this 
+    # DataLoader is going to create. Please be aware that excessive worker creation might 
+    # get DataLoader running slow or even freeze, lower the worker number to avoid 
+    # potential slowness/freeze if necessary.
     predictor = TilePrediction(patch_size=args.tile_size,
                                subdivisions=2.0,
                                pred_model=net,
                                batch_size=args.batch_size,
-                               workers=0)
+                               workers=2)
 
     #############################################################################################  
 
@@ -330,7 +336,7 @@ def segmentation(chunk):
 
 if __name__ == '__main__':
     t = time.time()
-    DATA_FOLDER = '/hpc/dhl_ec/VirtualSlides/HE'
+    DATA_FOLDER = args.slide_dir # '/hpc/dhl_ec/VirtualSlides/HE'
     chunk = get_chunk_AE( idx= int(args.index), num_tasks=int(args.num_tasks), dir = DATA_FOLDER )
     segmentation(chunk)
     tile_slides(args, chunk)
