@@ -28,9 +28,9 @@ eval "$(conda shell.bash hook)"
 conda activate convocals
 
 # edit the following line to run your script for the given paths and stain
-python3 /hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/wsi_preprocessing/segmentation.py \
+python3 CONVOCALS/wsi_preprocessing/segmentation.py \
 --index=$SLURM_ARRAY_TASK_ID --num_tasks=$SLURM_ARRAY_TASK_COUNT \
---slide_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques" \
---output_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques/PROCESSED_TEST" \
---masks_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques/PROCESSED_TEST/masks/" \
---model /hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/wsi_preprocessing//PathProfiler/tissue_segmentation/checkpoint_ts.pth
+--slide_dir="VirtualSlides" \
+--output_dir="VirtualSlides/PROCESSED" \
+--masks_dir="VirtualSlides/PROCESSED_TEST/masks/" \
+--model CONVOCALS/wsi_preprocessing//PathProfiler/tissue_segmentation/checkpoint_ts.pth
