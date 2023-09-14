@@ -1,10 +1,31 @@
+#!/usr/bin/env python
+# script to extract a thumbnails and macros whole-slide image files (*.TIF, *.NDPI, etc.)
+#
+# Ref: https://github.com/choosehappy/Snippets/blob/master/extract_macro_level_from_wsi_image_openslide_cli.py
+#
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+print("                                                        Image Tiling")
+print("")
+print("* Version          : v1.0.1")
+print("")
+print("* Last update      : 2023-09-13")
+print("* Written by       : Francesco Cisternino")
+print("* Edite by         : Craig Glastonbury | Sander W. van der Laan | Clint L. Miller | Yipei Song.")
+print("")
+print("* Description      : Some utilities for the segmentation pipeline.")
+print("")
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+
+# import general packages
 import os
 import argparse
 import datetime
-from PIL import Image
 import numpy as np
 import openslide
+from PIL import Image
 from PIL import ImageDraw
+
+# import custom packages/functions
 from segmentation_utils import select_random_tiles, get_chunk_AE
 from segmentation_utils import slide_to_scaled_pil_image, save_hdf5, get_chunk
 from dataset import Whole_Slide_Bag
@@ -114,3 +135,25 @@ if __name__ == "__main__":
     args = parser.parse_args()
     chunk = get_chunk('/group/glastonbury/GTEX-subset/', int(args.index), int(args.num_tasks))
     tile_slides(args, chunk)
+
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+print("+ The MIT License (MIT)                                                                                               +")
+print("+ Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan | Clint L. Miller | Yipei Song +")
+print("+                                                                                                                     +")
+print("+ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and                   +")
+print("+ associated documentation files (the \"Software\"), to deal in the Software without restriction, including           +")
+print("+ without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell             +")
+print("+ copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the            +")
+print("+ following conditions:                                                                                               +")
+print("+                                                                                                                     +")
+print("+ The above copyright notice and this permission notice shall be included in all copies or substantial                +")
+print("+ portions of the Software.                                                                                           +")
+print("+                                                                                                                     +")
+print("+ THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT             +")
+print("+ LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO           +")
+print("+ EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER           +")
+print("+ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR             +")
+print("+ THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                                          +")
+print("+                                                                                                                     +")
+print("+ Reference: http://opensource.org.                                                                                   +")
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")

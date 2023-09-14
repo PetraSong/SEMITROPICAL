@@ -6,8 +6,8 @@
 #SBATCH --time=40:00:00
 #SBATCH --output=./logs_evg_segm/%a.log
 #SBATCH --mem=250000M
-
-
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=s.w.vanderlaan-2@umcutrecht.nl
 echo '----------------------------'
 echo ' JOB ID: '$SLURM_ARRAY_JOB_ID
 echo ' CURRENT TASK ID: '$SLURM_JOB_ID
@@ -19,7 +19,10 @@ echo ' TOTAL NUMBER OF TASKS: '$SLURM_ARRAY_TASK_COUNT
 echo '----------------------------'
 
 eval "$(conda shell.bash hook)"
-# mamba activate /hpc/local/Rocky8/dhl_ec/software/mambaforge3/envs/convocals
 mamba activate convocals
 
-python3 /hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/wsi_preprocessing/segmentation.py -index=$SLURM_ARRAY_TASK_ID -num_tasks=$SLURM_ARRAY_TASK_COUNT --slide_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques" -output_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques/PROCESSED_TEST" -masks_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques/PROCESSED_TEST/masks/"
+python3 /hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/wsi_preprocessing/segmentation.py \
+-index=$SLURM_ARRAY_TASK_ID -num_tasks=$SLURM_ARRAY_TASK_COUNT \
+--slide_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques" \
+-output_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques/PROCESSED_TEST" -masks_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques/PROCESSED_TEST/masks/" \
+--model ./PathProfiler/tissue_segmentation/checkpoint_ts.pth

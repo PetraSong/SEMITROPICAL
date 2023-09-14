@@ -1,3 +1,21 @@
+#!/usr/bin/env python
+# script to extract a thumbnails and macros whole-slide image files (*.TIF, *.NDPI, etc.)
+#
+# Ref: https://github.com/choosehappy/Snippets/blob/master/extract_macro_level_from_wsi_image_openslide_cli.py
+#
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+print("                                                 Segmentation Utilities")
+print("")
+print("* Version          : v1.0.1")
+print("")
+print("* Last update      : 2023-09-13")
+print("* Written by       : Francesco Cisternino")
+print("* Edite by         : Craig Glastonbury | Sander W. van der Laan | Clint L. Miller | Yipei Song.")
+print("")
+print("* Description      : Some utilities for the segmentation pipeline.")
+print("")
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+
 import math
 import h5py
 import PIL
@@ -8,7 +26,7 @@ import random
 def get_chunk(data_folder, i, num_tasks):
     ROOT_DIR = data_folder
     slides = []
-    tissues_list = os.listdir('/group/glastonbury/GTEX-subset/')
+    tissues_list = os.listdir('./') # os.listdir('/group/glastonbury/GTEX-subset/')
     for tissue in tissues_list:
         list = glob.glob(os.path.join(data_folder, tissue, '*.svs'))
         for elem in list:
@@ -24,9 +42,6 @@ def get_chunk(data_folder, i, num_tasks):
         chunk = []
 
     return chunk
-
-
-    
 
 def slide_to_scaled_pil_image(slide, SCALE_FACTOR=32):
     """
@@ -44,7 +59,6 @@ def slide_to_scaled_pil_image(slide, SCALE_FACTOR=32):
     whole_slide_image = whole_slide_image.convert("RGB")
     img = whole_slide_image.resize((new_w, new_h), PIL.Image.BILINEAR)
     return img, (large_w, large_h, new_w, new_h)
-
 
 def save_hdf5(output_path, asset_dict, attr_dict= None, mode='a'):
     file = h5py.File(output_path, mode)
@@ -67,8 +81,7 @@ def save_hdf5(output_path, asset_dict, attr_dict= None, mode='a'):
     file.close()
     return output_path
 
-
-def select_random_tiles(idx, num_tasks, TISSUES_DIR = '/group/glastonbury/gtex/gtex_images/*/'):
+def select_random_tiles(idx, num_tasks, TISSUES_DIR = './'): # /group/glastonbury/gtex/gtex_images/*/
     import random
     tissues = {}
     slides = []
@@ -90,13 +103,12 @@ def select_random_tiles(idx, num_tasks, TISSUES_DIR = '/group/glastonbury/gtex/g
 
     return chunk
 
-
 def get_chunk_AE(idx, num_tasks, dir):
 
     chunk = []
     slides = []
 
-    slides = glob.glob(os.path.join(dir, '_ndpi/*.ndpi')) + glob.glob(os.path.join(dir, '_tif/*.TIF'))
+    slides = glob.glob(os.path.join(dir, '*.ndpi')) + glob.glob(os.path.join(dir, '*.TIF'))
 
     print('Number of slides:', len(slides), flush=True)
     slides_per_job = math.ceil(len(slides)/num_tasks)
@@ -106,7 +118,6 @@ def get_chunk_AE(idx, num_tasks, dir):
 
     return chunk
 
-
 def get_coords_h5(filename):
     with h5py.File(filename, "r") as f:
         # get first object name/key; may or may NOT be a group
@@ -114,3 +125,24 @@ def get_coords_h5(filename):
         coords = f[coords_group_key][()]  # returns as a numpy array
         return coords
 
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+print("+ The MIT License (MIT)                                                                                               +")
+print("+ Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan | Clint L. Miller | Yipei Song +")
+print("+                                                                                                                     +")
+print("+ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and                   +")
+print("+ associated documentation files (the \"Software\"), to deal in the Software without restriction, including           +")
+print("+ without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell             +")
+print("+ copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the            +")
+print("+ following conditions:                                                                                               +")
+print("+                                                                                                                     +")
+print("+ The above copyright notice and this permission notice shall be included in all copies or substantial                +")
+print("+ portions of the Software.                                                                                           +")
+print("+                                                                                                                     +")
+print("+ THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT             +")
+print("+ LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO           +")
+print("+ EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER           +")
+print("+ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR             +")
+print("+ THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                                          +")
+print("+                                                                                                                     +")
+print("+ Reference: http://opensource.org.                                                                                   +")
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
