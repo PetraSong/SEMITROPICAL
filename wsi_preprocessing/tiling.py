@@ -36,24 +36,24 @@ def get_args_parser():
     parser = argparse.ArgumentParser('segmentation', add_help=False)
 
     # JOB INDEX
-    parser.add_argument('-index', type=str, default=0, help='index of actual job')  
+    parser.add_argument('--index', type=str, default=0, help='index of actual job')  
     
     # NUMBER OF TASKS
-    parser.add_argument('-num_tasks', type=str, default=1, help='number of tasks')
+    parser.add_argument('--num_tasks', type=str, default=1, help='number of tasks')
 
     # SEGMENTATION OUTPUT DIRECTORY
-    parser.add_argument('-output_dir', type=str, default="/hpc/dhl_ec/fcisternino/ATHEROEXPRESS_PROCESSED/", 
+    parser.add_argument('--output_dir', type=str, default="/hpc/dhl_ec/fcisternino/ATHEROEXPRESS_PROCESSED/", 
                         help='root dir containing all the output results (to be created)')
 
     # MASKS DIR
-    parser.add_argument('-masks_dir', type=str, default="/hpc/dhl_ec/fcisternino/ATHEROEXPRESS_PROCESSED/masks/", 
+    parser.add_argument('--masks_dir', type=str, default="/hpc/dhl_ec/fcisternino/ATHEROEXPRESS_PROCESSED/masks/", 
                         help='directory where the black and white masks will be stored')
 
     # BATCH SIZE (tiles level)
-    parser.add_argument('-batch_size_tiling', type=int, default=512, help='batch size')
+    parser.add_argument('--batch_size_tiling', type=int, default=512, help='batch size')
 
     # SAVE THUMBNAILS
-    parser.add_argument('-save_thumbnails', default=True , help='whether to save segmentation thumbnails')
+    parser.add_argument('--save_thumbnails', default=True , help='whether to save segmentation thumbnails')
 
     return parser
 
