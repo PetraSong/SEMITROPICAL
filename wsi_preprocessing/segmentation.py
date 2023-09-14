@@ -57,6 +57,7 @@ parser = argparse.ArgumentParser(parents=[tiling.get_args_parser()],
 	usage='segmentation.py --slide_id --model --mask_magnification --mpp_level_0 --gpu_id --tile_size --batch_size; optional: --slide_dir ; for help: -h/--help',
 	formatter_class=argparse.RawDescriptionHelpFormatter,
 	epilog=textwrap.dedent("Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan (s.w.vanderlaan-2@umcutrecht.nl) | Clint L. Miller | Yipei Song"))
+
 parser.add_argument('--slide_dir', default='', help='path to WSIs dir', type=str, required=False)
 parser.add_argument('--slide_id', default='*', type=str, help='slide filename ("*" for all slides)')
 parser.add_argument('--model', default='./PathProfiler/tissue_segmentation/checkpoint_ts.pth', type=str)
@@ -65,6 +66,7 @@ parser.add_argument('--mpp_level_0', default=None, type=float)
 parser.add_argument('--gpu_id', default='0', type=str)
 parser.add_argument('--tile_size', default=512, type=int)
 parser.add_argument('--batch_size', default=1, type=int)
+
 args = parser.parse_args()
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"  # see issue #152
@@ -367,7 +369,7 @@ def segmentation(chunk):
 
 if __name__ == '__main__':
     t = time.time()
-    DATA_FOLDER = args.slide_dir # '/hpc/dhl_ec/VirtualSlides/HE'
+    DATA_FOLDER = '/hpc/dhl_ec/VirtualSlides/HE' # args.slide_dir # '/hpc/dhl_ec/VirtualSlides/HE'
     chunk = get_chunk_AE( idx= int(args.index), num_tasks=int(args.num_tasks), dir = DATA_FOLDER )
     segmentation(chunk)
     tile_slides(args, chunk)
