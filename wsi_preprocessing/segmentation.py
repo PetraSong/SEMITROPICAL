@@ -62,7 +62,7 @@ from PathProfiler.tissue_segmentation.unet import UNet
 parser = argparse.ArgumentParser(parents=[tiling.get_args_parser()],
                                  prog='segmentation',
 	description='This script will segment whole-slide images (WSI), for example .TIF- or .ndpi-files, into tissue and non-tissue, and create masked images at a given level of magnification from (a list of given) images.',
-	usage='segmentation.py --slide_id --model --mask_magnification --mpp_level_0 --gpu_id --tile_size --batch_size; optional: --slide_dir ; for help: -h/--help',
+	usage='segmentation.py --slide_id --model --mask_magnification --mpp_level_0 --gpu_id --tile_size --batch_size; optional: --slide_dir; for help: -h/--help; for verbose (with extra debug information): -v/--verbose; for version information: -V/--version',
 	formatter_class=argparse.RawDescriptionHelpFormatter,
 	epilog=textwrap.dedent("Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan (s.w.vanderlaan-2@umcutrecht.nl) | Clint L. Miller | Yipei Song"))
 
@@ -74,6 +74,7 @@ parser.add_argument('--mpp_level_0', default=None, type=float, help='Manually en
 parser.add_argument('--gpu_id', default='0', type=str, help='GPU id to use; the default is `1`.')
 parser.add_argument('--tile_size', default=512, type=int, help='The pixel size of the tiles; the default is `512`.')
 parser.add_argument('--batch_size', default=1, type=int, help='The batch size; the default is `1`.')
+parser.add_argument('-V', '--version', action='version', version='%(prog)s v1.0.1-2023-09-13')
 
 args = parser.parse_args()
 
@@ -328,7 +329,7 @@ def segmentation(chunk):
 
     #############################################################
     # sanity check
-    assert args.mask_magnification in [2.5, 1.25], "tile_magnification should be either 2.5 or 1.25"
+    assert args.mask_magnification in [2.5, 1.25], "==> tile_magnification should be either 2.5 or 1.25"
     assert os.path.isfile(args.model), "=> no checkpoint found at '{}'".format(args.model)
     #############################################################
 
@@ -388,7 +389,7 @@ if __name__ == '__main__':
     segmentation(chunk)
     print('> tiling image')
     tile_slides(args, chunk)
-    print('> tissue segmentation done (%.2f)' % (time.time() - t))
+    print('==> tissue segmentation done (%.2f)' % (time.time() - t))
 
 print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 print("+ The MIT License (MIT)                                                                                               +")
