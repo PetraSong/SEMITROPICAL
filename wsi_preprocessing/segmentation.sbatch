@@ -18,7 +18,7 @@ echo ' MAX TASK ID: '$SLURM_ARRAY_TASK_MAX
 echo ' TOTAL NUMBER OF TASKS: '$SLURM_ARRAY_TASK_COUNT
 echo '----------------------------'
 
-eval "$(conda shell.bash hook)"
+eval "$(mamba shell.bash hook)"
 mamba activate convocals
 
 python3 /hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/wsi_preprocessing/segmentation.py \
