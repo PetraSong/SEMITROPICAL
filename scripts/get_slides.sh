@@ -35,14 +35,18 @@ WORKDIR="_images"
 
 STAIN="EVG"
 
-echo "Creating the $WORKDIR in the $STAIN folder."
-mkdir -v $VIRTUALSLIDESDIR/$STAIN/$WORKDIR
+echo "Creating the [$WORKDIR] directory in the [$STAIN] folder."
+if [ ! -d $VIRTUALSLIDESDIR/$STAIN/$WORKDIR ]; then
+	mkdir $VIRTUALSLIDESDIR/$STAIN/$WORKDIR
+else
+	echo "[$WORKDIR] directory exists -- skipping"
+fi
 
-echo "Start the copying of WSI for $STAIN."
+echo "Start the copying of WSI for [$STAIN]."
 for STUDYNUMBER in ${AE_list2461}; do
 
-    echo "> Copying slides for study ${STUDYNUMBER} and stain ${STAIN}"
-    cp -v $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$STAIN/
+    echo "> Copying slides for study [${STUDYNUMBER}] and stain [${STAIN}]"
+    cp -v $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$STAIN/$WORKDIR
 
 done
 
