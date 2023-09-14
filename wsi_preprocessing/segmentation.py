@@ -1,16 +1,16 @@
-# print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-# print("                                                     Segmentation")
-# print("")
-# print("* Version          : v1.0.1")
-# print("")
-# print("* Last update      : 2023-09-13")
-# print("* Written by       : Francesco Cisternino")
-# print("* Edite by         : Craig Glastonbury | Sander W. van der Laan | Clint L. Miller | Yipei Song.")
-# print("")
-# print("* Description      : Segmentation pipeline to identify tissue and mask non-tissue areas using the U-Net model.")
-# print("                     The output is a black and white mask.")
-# print("")
-# print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+print("                                                     Segmentation")
+print("")
+print("* Version          : v1.0.1")
+print("")
+print("* Last update      : 2023-09-13")
+print("* Written by       : Francesco Cisternino")
+print("* Edite by         : Craig Glastonbury | Sander W. van der Laan | Clint L. Miller | Yipei Song.")
+print("")
+print("* Description      : Segmentation pipeline to identify tissue and mask non-tissue areas using the U-Net model.")
+print("                     The output is a black and white mask.")
+print("")
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
 # import general packages
 import sys
@@ -51,6 +51,7 @@ from segmentation_utils import get_chunk_AE
 from PathProfiler.common.wsi_reader import get_reader_impl
 from PathProfiler.tissue_segmentation.unet import UNet
 
+# for argument parser
 parser = argparse.ArgumentParser(parents=[tiling.get_args_parser()],
                                  prog='segmentation',
 	description='This script will segment whole-slide images (.TIF or .ndpi) into tissue and non-tissue, and create masked images at a given level of magnification from (a list of given) images.',
@@ -72,8 +73,12 @@ args = parser.parse_args()
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"  # see issue #152
 os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
 
+print("Checking if processing directory exists, if not it will be automagically made...")
 if not os.path.exists(args.masks_dir):
-    os.makedirs(args.masks_dir)
+    try:
+        os.makedirs(args.masks_dir)
+    except FileExistsError:
+        pass
 
 
 class CLAHE(object):
@@ -371,28 +376,31 @@ if __name__ == '__main__':
     t = time.time()
     DATA_FOLDER = args.slide_dir # '/hpc/dhl_ec/VirtualSlides/EVG' 
     chunk = get_chunk_AE( idx= int(args.index), num_tasks=int(args.num_tasks), dir = DATA_FOLDER )
+    print('Starting segmentation and tiling.')
+    print('> segmentating image')
     segmentation(chunk)
+    print('> tiling image')
     tile_slides(args, chunk)
-    print('Tissue segmentation done (%.2f)' % (time.time() - t))
+    print('> tissue segmentation done (%.2f)' % (time.time() - t))
 
-# print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-# print("+ The MIT License (MIT)                                                                                               +")
-# print("+ Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan | Clint L. Miller | Yipei Song +")
-# print("+                                                                                                                     +")
-# print("+ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and                   +")
-# print("+ associated documentation files (the \"Software\"), to deal in the Software without restriction, including           +")
-# print("+ without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell             +")
-# print("+ copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the            +")
-# print("+ following conditions:                                                                                               +")
-# print("+                                                                                                                     +")
-# print("+ The above copyright notice and this permission notice shall be included in all copies or substantial                +")
-# print("+ portions of the Software.                                                                                           +")
-# print("+                                                                                                                     +")
-# print("+ THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT             +")
-# print("+ LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO           +")
-# print("+ EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER           +")
-# print("+ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR             +")
-# print("+ THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                                          +")
-# print("+                                                                                                                     +")
-# print("+ Reference: http://opensource.org.                                                                                   +")
-# print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+print("+ The MIT License (MIT)                                                                                               +")
+print("+ Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan | Clint L. Miller | Yipei Song +")
+print("+                                                                                                                     +")
+print("+ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and                   +")
+print("+ associated documentation files (the \"Software\"), to deal in the Software without restriction, including           +")
+print("+ without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell             +")
+print("+ copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the            +")
+print("+ following conditions:                                                                                               +")
+print("+                                                                                                                     +")
+print("+ The above copyright notice and this permission notice shall be included in all copies or substantial                +")
+print("+ portions of the Software.                                                                                           +")
+print("+                                                                                                                     +")
+print("+ THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT             +")
+print("+ LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO           +")
+print("+ EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER           +")
+print("+ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR             +")
+print("+ THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                                          +")
+print("+                                                                                                                     +")
+print("+ Reference: http://opensource.org.                                                                                   +")
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
