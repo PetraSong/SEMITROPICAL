@@ -22,7 +22,7 @@ echo '----------------------------'
 eval "$(conda shell.bash hook)"
 conda activate convocals
 
-python3 segmentation.py \
+python3 /hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/wsi_preprocessing/segmentation.py \
 --index=$SLURM_ARRAY_TASK_ID --num_tasks=$SLURM_ARRAY_TASK_COUNT \
 --slide_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques" \
 --output_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques/PROCESSED_TEST" \

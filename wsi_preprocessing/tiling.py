@@ -32,7 +32,6 @@ from torch.utils.data import DataLoader
 
 def get_args_parser():
     # GENERAL
-    
     parser = argparse.ArgumentParser('segmentation', add_help=False)
 
     # JOB INDEX
