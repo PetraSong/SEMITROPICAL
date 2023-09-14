@@ -1,15 +1,15 @@
 #!/bin/bash
 #
-#SBATCH --job-name=evg_segmentation
-#SBATCH --partition=cpu
-#SBATCH --array=0-9
-#SBATCH --cpus-per-task=1
-#SBATCH --time=40:00:00
-#SBATCH --output=/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques/logs_evg_segm/%a.log
-#SBATCH --error=/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques/logs_evg_segm/%a.errors
-#SBATCH --mem=250000M
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user=s.w.vanderlaan-2@umcutrecht.nl
+#SBATCH --job-name=evg_segmentation # set the name of the job
+#SBATCH --partition=cpu # set the partition for the job
+#SBATCH --array=0-9 # set the number of slides to be processed
+#SBATCH --cpus-per-task=1 # set the number of cores
+#SBATCH --time=40:00:00 # set the total run time limit (HH:MM:SS)
+#SBATCH --output=/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques/logs_evg_segm/%a.log # make sure to create the logs_evg_segm folder first
+#SBATCH --error=/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques/logs_evg_segm/%a.errors # make sure to create the logs_evg_segm folder first
+#SBATCH --mem=250000M # set the memory limit
+#SBATCH --mail-type=ALL # select which email types will be sent (BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=s.w.vanderlaan-2@umcutrecht.nl # set destination email
 #
 # Description: Script to run segmentation on STAINED slides
 echo '----------------------------'
