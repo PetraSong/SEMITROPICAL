@@ -23,8 +23,11 @@ import os
 import gc
 import numpy as np
 import glob
-import argparse
 import decimal
+
+# for argument parser
+import argparse
+import textwrap
 
 # import openslide and cv2
 import cv2
