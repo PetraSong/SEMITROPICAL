@@ -8,7 +8,10 @@ print("* Written by       : Francesco Cisternino")
 print("* Edite by         : Craig Glastonbury | Sander W. van der Laan | Clint L. Miller | Yipei Song.")
 print("")
 print("* Description      : Segmentation pipeline to identify tissue and mask non-tissue areas using the U-Net model.")
+print("                     The pipeline is adapted from PathProfiler[1] which was trained on prostate cancer data.")
 print("                     The output is a black and white mask.")
+print("")
+print("                     [1] https://github.com/MaryamHaghighat/PathProfiler")
 print("")
 print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
@@ -54,19 +57,19 @@ from PathProfiler.tissue_segmentation.unet import UNet
 # for argument parser
 parser = argparse.ArgumentParser(parents=[tiling.get_args_parser()],
                                  prog='segmentation',
-	description='This script will segment whole-slide images (.TIF or .ndpi) into tissue and non-tissue, and create masked images at a given level of magnification from (a list of given) images.',
+	description='This script will segment whole-slide images (WSI), for example .TIF- or .ndpi-files, into tissue and non-tissue, and create masked images at a given level of magnification from (a list of given) images.',
 	usage='segmentation.py --slide_id --model --mask_magnification --mpp_level_0 --gpu_id --tile_size --batch_size; optional: --slide_dir ; for help: -h/--help',
 	formatter_class=argparse.RawDescriptionHelpFormatter,
 	epilog=textwrap.dedent("Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan (s.w.vanderlaan-2@umcutrecht.nl) | Clint L. Miller | Yipei Song"))
 
-parser.add_argument('--slide_dir', default='', help='path to WSIs dir', type=str, required=False)
-parser.add_argument('--slide_id', default='*', type=str, help='slide filename ("*" for all slides)')
-parser.add_argument('--model', default='./PathProfiler/tissue_segmentation/checkpoint_ts.pth', type=str)
-parser.add_argument('--mask_magnification', default=2.5, type=float)
-parser.add_argument('--mpp_level_0', default=None, type=float)
-parser.add_argument('--gpu_id', default='0', type=str)
-parser.add_argument('--tile_size', default=512, type=int)
-parser.add_argument('--batch_size', default=1, type=int)
+parser.add_argument('-d/--slide_dir', default='', type=str, help='The path to WSIs dir.', required=False)
+parser.add_argument('-l/--slide_id', default='*', type=str, help='Slide filename ("*" for all slides); the default is `*`.')
+parser.add_argument('-c/--model', default='./PathProfiler/tissue_segmentation/checkpoint_ts.pth', type=str, help='The model file in .pth format; the default is `./PathProfiler/tissue_segmentation/checkpoint_ts.pth`.')
+parser.add_argument('-z/--mask_magnification', default=2.5, type=float, help='The magnification power of the image masks, for example 2.5, 1.25; the default is `2.5`.')
+parser.add_argument('-p/--mpp_level_0', default=None, type=float, help='Manually enter mpp at level 0 if not available in slide properties as `slide.mpp[MPP]`; the default is `None`.')
+parser.add_argument('-g/--gpu_id', default='0', type=str, help='GPU id to use; the default is `1`.')
+parser.add_argument('-x/--tile_size', default=512, type=int, help='The pixel size of the tiles; the default is `512`.')
+parser.add_argument('-a/--batch_size', default=1, type=int, help='The batch size; the default is `1`.')
 
 args = parser.parse_args()
 

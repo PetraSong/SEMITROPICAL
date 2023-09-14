@@ -35,24 +35,24 @@ def get_args_parser():
     parser = argparse.ArgumentParser('segmentation', add_help=False)
 
     # JOB INDEX
-    parser.add_argument('--index', type=str, default=0, help='index of actual job')  
+    parser.add_argument('-i/--index', default=0, help='Index of actual job to split the workload; the default is `0`.')  
     
     # NUMBER OF TASKS
-    parser.add_argument('--num_tasks', type=str, default=1, help='number of tasks')
+    parser.add_argument('-n/--num_tasks', default=1, type=str, help='The number of tasks, i.e. jobs to split the workload; the default is `1`.')
 
     # SEGMENTATION OUTPUT DIRECTORY
-    parser.add_argument('--output_dir', type=str, default="/hpc/dhl_ec/fcisternino/ATHEROEXPRESS_PROCESSED/", 
-                        help='root dir containing all the output results (to be created)')
+    parser.add_argument('-o/--output_dir', default="./PROCESSED/", type=str, 
+                        help='The root output directory containing all the output results (to be created); the default is `./PROCESSED/`.')
 
     # MASKS DIR
-    parser.add_argument('--masks_dir', type=str, default="/hpc/dhl_ec/fcisternino/ATHEROEXPRESS_PROCESSED/masks/", 
-                        help='directory where the black and white masks will be stored')
+    parser.add_argument('-m/--masks_dir', default="./PROCESSED/masks/", type=str, 
+                        help='The output subdirectory where the black and white masks will be stored; the default is `./PROCESSED/masks/`.')
 
     # BATCH SIZE (tiles level)
-    parser.add_argument('--batch_size_tiling', type=int, default=512, help='batch size')
+    parser.add_argument('-b/--batch_size_tiling', default=512, type=int, help='The batch size for the tiling process; the default is `512`.')
 
     # SAVE THUMBNAILS
-    parser.add_argument('--save_thumbnails', default=True , help='whether to save segmentation thumbnails')
+    parser.add_argument('-/t--save_thumbnails', default=True , help='Whether to save segmentation thumbnails; the default is `True`.')
 
     return parser
 
