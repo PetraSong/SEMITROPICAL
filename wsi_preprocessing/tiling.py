@@ -133,7 +133,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser('segmentation', parents=[get_args_parser()])
     args = parser.parse_args()
     # chunk = get_chunk('/group/glastonbury/GTEX-subset/', int(args.index), int(args.num_tasks))
-    chunk = get_chunk_wsi('', int(args.index), int(args.num_tasks))
+    chunk = get_chunk('', int(args.index), int(args.num_tasks))
     tile_slides(args, chunk)
 
 # print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
