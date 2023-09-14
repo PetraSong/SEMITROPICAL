@@ -18,25 +18,26 @@ import os
 import glob
 import random
 
-def get_chunk(data_folder, i, num_tasks):
-    ROOT_DIR = data_folder
-    slides = []
-    tissues_list = os.listdir('./') # os.listdir('/group/glastonbury/GTEX-subset/')
-    for tissue in tissues_list:
-        list = glob.glob(os.path.join(data_folder, tissue, '*.svs'))
-        for elem in list:
-            slides.append(elem)
+# should this not be removed? as the get_chunk_ae exists?
+# def get_chunk(data_folder, i, num_tasks):
+#     ROOT_DIR = data_folder
+#     slides = []
+#     tissues_list = os.listdir('./') # os.listdir('/group/glastonbury/GTEX-subset/')
+#     for tissue in tissues_list:
+#         list = glob.glob(os.path.join(data_folder, tissue, '*.svs'))
+#         for elem in list:
+#             slides.append(elem)
     
-    print('Number of slides:', len(slides), flush=True)
-    slides_per_job = math.ceil(len(slides)/num_tasks)
-    chunks = [slides[x:x+ slides_per_job] for x in range(0, len(slides), slides_per_job )]
-    if i < len(chunks):
-        chunk = chunks[i]
-        print(f'Chunk {i}: {len(chunk)} slides', flush= True)
-    else:
-        chunk = []
+#     print('Number of slides:', len(slides), flush=True)
+#     slides_per_job = math.ceil(len(slides)/num_tasks)
+#     chunks = [slides[x:x+ slides_per_job] for x in range(0, len(slides), slides_per_job )]
+#     if i < len(chunks):
+#         chunk = chunks[i]
+#         print(f'Chunk {i}: {len(chunk)} slides', flush= True)
+#     else:
+#         chunk = []
 
-    return chunk
+#     return chunk
 
 def slide_to_scaled_pil_image(slide, SCALE_FACTOR=32):
     """
@@ -110,6 +111,15 @@ def get_chunk_AE(idx, num_tasks, dir):
     chunks = [slides[x:x+ slides_per_job] for x in range(0, len(slides), slides_per_job )]
     chunk = chunks[idx]
     print(f'Chunk {idx}: {len(chunk)} slides', flush= True)
+
+    # debug
+    try:
+        chunk = chunks[idx]
+    except IndexError as e:
+        print(f"IndexError: {e}")
+        print(f"idx: {idx}, len(chunks): {len(chunks)}")
+        # Add more debug information as needed
+        raise  # Reraise the exception to see the full traceback
 
     return chunk
 
