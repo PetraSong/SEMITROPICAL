@@ -4,8 +4,8 @@
 #SBATCH --array=0-9
 #SBATCH --cpus-per-task=1
 #SBATCH --time=40:00:00
-#SBATCH --output=/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques//logs_evg_segm/%a.log
-#SBATCH --error=/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques//logs_evg_segm/%a.errors
+#SBATCH --output=./logs_evg_segm/%a.log
+#SBATCH --error=./logs_evg_segm/%a.errors
 #SBATCH --mem=250000M
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=s.w.vanderlaan-2@umcutrecht.nl
@@ -22,9 +22,9 @@ echo '----------------------------'
 eval "$(conda shell.bash hook)"
 conda activate convocals
 
-python3 /hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/wsi_preprocessing/segmentation.py \
+python3 segmentation.py \
 --index=$SLURM_ARRAY_TASK_ID --num_tasks=$SLURM_ARRAY_TASK_COUNT \
 --slide_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques" \
 --output_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques/PROCESSED_TEST" \
 --masks_dir="/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques/PROCESSED_TEST/masks/" \
---model /hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/wsi_preprocessing/PathProfiler/tissue_segmentation/checkpoint_ts.pth
+--model ./PathProfiler/tissue_segmentation/checkpoint_ts.pth
