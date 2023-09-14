@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# script to extract a thumbnails and macros whole-slide image files (*.TIF, *.NDPI, etc.)
-#
-# Ref: https://github.com/choosehappy/Snippets/blob/master/extract_macro_level_from_wsi_image_openslide_cli.py
-#
 print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 print("                                                        Image Tiling")
 print("")
