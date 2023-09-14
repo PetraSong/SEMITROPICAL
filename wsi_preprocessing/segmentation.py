@@ -66,14 +66,14 @@ parser = argparse.ArgumentParser(parents=[tiling.get_args_parser()],
 	formatter_class=argparse.RawDescriptionHelpFormatter,
 	epilog=textwrap.dedent("Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan (s.w.vanderlaan-2@umcutrecht.nl) | Clint L. Miller | Yipei Song"))
 
-parser.add_argument('-d/--slide_dir', default='', type=str, help='The path to WSIs dir.', required=False)
-parser.add_argument('-l/--slide_id', default='*', type=str, help='Slide filename ("*" for all slides); the default is `*`.')
-parser.add_argument('-c/--model', default='./PathProfiler/tissue_segmentation/checkpoint_ts.pth', type=str, help='The model file in .pth format; the default is `./PathProfiler/tissue_segmentation/checkpoint_ts.pth`.')
-parser.add_argument('-z/--mask_magnification', default=2.5, type=float, help='The magnification power of the image masks, for example 2.5, 1.25; the default is `2.5`.')
-parser.add_argument('-p/--mpp_level_0', default=None, type=float, help='Manually enter mpp at level 0 if not available in slide properties as `slide.mpp[MPP]`; the default is `None`.')
-parser.add_argument('-g/--gpu_id', default='0', type=str, help='GPU id to use; the default is `1`.')
-parser.add_argument('-x/--tile_size', default=512, type=int, help='The pixel size of the tiles; the default is `512`.')
-parser.add_argument('-a/--batch_size', default=1, type=int, help='The batch size; the default is `1`.')
+parser.add_argument('--slide_dir', default='', type=str, help='The path to WSIs dir.', required=False)
+parser.add_argument('--slide_id', default='*', type=str, help='Slide filename ("*" for all slides); the default is `*`.')
+parser.add_argument('--model', default='./PathProfiler/tissue_segmentation/checkpoint_ts.pth', type=str, help='The model file in .pth format; the default is `./PathProfiler/tissue_segmentation/checkpoint_ts.pth`.')
+parser.add_argument('--mask_magnification', default=2.5, type=float, help='The magnification power of the image masks, for example 2.5, 1.25; the default is `2.5`.')
+parser.add_argument('--mpp_level_0', default=None, type=float, help='Manually enter mpp at level 0 if not available in slide properties as `slide.mpp[MPP]`; the default is `None`.')
+parser.add_argument('--gpu_id', default='0', type=str, help='GPU id to use; the default is `1`.')
+parser.add_argument('--tile_size', default=512, type=int, help='The pixel size of the tiles; the default is `512`.')
+parser.add_argument('--batch_size', default=1, type=int, help='The batch size; the default is `1`.')
 
 args = parser.parse_args()
 
