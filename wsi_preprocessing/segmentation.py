@@ -50,9 +50,9 @@ import scipy.signal
 from skimage.morphology import remove_small_objects
 
 # import custom packages/functions
-from tiling import tile_slides
 import tiling
-from segmentation_utils import get_chunk_AE
+from tiling import tile_slides
+from segmentation_utils import get_chunk_wsi
 
 # import model
 from PathProfiler.common.wsi_reader import get_reader_impl
@@ -382,7 +382,7 @@ def segmentation(chunk):
 if __name__ == '__main__':
     t = time.time()
     DATA_FOLDER = args.slide_dir # '/hpc/dhl_ec/VirtualSlides/EVG' 
-    chunk = get_chunk_AE( idx= int(args.index), num_tasks=int(args.num_tasks), dir = DATA_FOLDER )
+    chunk = get_chunk_wsi( idx= int(args.index), num_tasks=int(args.num_tasks), dir = DATA_FOLDER )
     print('Starting segmentation and tiling.')
     print('> segmentating image')
     segmentation(chunk)

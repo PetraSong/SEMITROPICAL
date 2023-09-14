@@ -25,7 +25,7 @@ from PIL import Image
 from PIL import ImageDraw
 
 # import custom packages/functions
-from segmentation_utils import select_random_tiles, get_chunk_AE
+from segmentation_utils import select_random_tiles, get_chunk_wsi
 from segmentation_utils import slide_to_scaled_pil_image, save_hdf5, get_chunk
 from dataset import Whole_Slide_Bag
 from torch.utils.data import DataLoader
@@ -55,7 +55,6 @@ def get_args_parser():
     parser.add_argument('--save_thumbnails', default=True , help='Whether to save segmentation thumbnails; the default is `True`.')
 
     return parser
-
 
 
 def tile_slides(args, chunk):
@@ -133,7 +132,8 @@ def tile_slides(args, chunk):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser('segmentation', parents=[get_args_parser()])
     args = parser.parse_args()
-    chunk = get_chunk('/group/glastonbury/GTEX-subset/', int(args.index), int(args.num_tasks))
+    # chunk = get_chunk('/group/glastonbury/GTEX-subset/', int(args.index), int(args.num_tasks))
+    chunk = get_chunk_wsi('', int(args.index), int(args.num_tasks))
     tile_slides(args, chunk)
 
 # print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")

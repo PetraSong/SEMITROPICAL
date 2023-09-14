@@ -99,7 +99,7 @@ def select_random_tiles(idx, num_tasks, TISSUES_DIR = './'): # /group/glastonbur
 
     return chunk
 
-def get_chunk_AE(idx, num_tasks, dir):
+def get_chunk_wsi(idx, num_tasks, dir):
 
     chunk = []
     slides = []
