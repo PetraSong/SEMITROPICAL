@@ -33,13 +33,14 @@ from torch.utils.data import DataLoader
 def get_args_parser():
     # GENERAL
     
-    # parser = argparse.ArgumentParser('segmentation', add_help=False)
-    parser = argparse.ArgumentParser('segmentation',
-                                 prog='tiling',
-	description='This script will segment whole-slide images (.TIF or .ndpi) into tissue and non-tissue, and create masked images at a given level of magnification from (a list of given) images.',
-	usage='tiling.py -i/--index -n/--num_tasks -o/--output_dir -k/--masks_dir -c/--batch_size_tiling -e/--save_thumbnails; for help: -h/--help',
-	formatter_class=argparse.RawDescriptionHelpFormatter,
-	epilog=textwrap.dedent("Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan (s.w.vanderlaan-2@umcutrecht.nl) | Clint L. Miller | Yipei Song"))
+    parser = argparse.ArgumentParser('segmentation', add_help=False)
+    # why is this not working?
+    # parser = argparse.ArgumentParser('segmentation',
+    #                              prog='tiling',
+	# description='This script will segment whole-slide images (.TIF or .ndpi) into tissue and non-tissue, and create masked images at a given level of magnification from (a list of given) images.',
+	# usage='tiling.py -i/--index -n/--num_tasks -o/--output_dir -k/--masks_dir -c/--batch_size_tiling -e/--save_thumbnails; for help: -h/--help',
+	# formatter_class=argparse.RawDescriptionHelpFormatter,
+	# epilog=textwrap.dedent("Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan (s.w.vanderlaan-2@umcutrecht.nl) | Clint L. Miller | Yipei Song"))
 
     # JOB INDEX
     parser.add_argument('--index', type=str, default=0, help='index of actual job')  
