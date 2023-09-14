@@ -12,7 +12,8 @@ print("* Last update      : 2023-09-13")
 print("* Written by       : Francesco Cisternino")
 print("* Edite by         : Craig Glastonbury | Sander W. van der Laan | Clint L. Miller | Yipei Song.")
 print("")
-print("* Description      : Some utilities for the segmentation pipeline.")
+print("* Description      : Segmentation pipeline to identify tissue and mask non-tissue areas using the U-Net model.")
+print("                     The output is a black and white mask.")
 print("")
 print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
@@ -52,16 +53,20 @@ from segmentation_utils import get_chunk_AE
 from PathProfiler.common.wsi_reader import get_reader_impl
 from PathProfiler.tissue_segmentation.unet import UNet
 
-
-parser = argparse.ArgumentParser(parents=[tiling.get_args_parser()])
-parser.add_argument('--slide_dir', default='', help='path to WSIs dir', type=str, required=False)
-parser.add_argument('--slide_id', default='*', type=str, help='slide filename ("*" for all slides)')
-parser.add_argument('--model', default='./PathProfiler/tissue_segmentation/checkpoint_ts.pth', type=str)
-parser.add_argument('--mask_magnification', default=2.5, type=float)
-parser.add_argument('--mpp_level_0', default=None, type=float)
-parser.add_argument('--gpu_id', default='0', type=str)
-parser.add_argument('--tile_size', default=512, type=int)
-parser.add_argument('--batch_size', default=1, type=int)
+parser = argparse.ArgumentParser(parents=[tiling.get_args_parser()],
+                                 prog='segmentation',
+	description='This script will segment whole-slide images (.TIF or .ndpi) into tissue and non-tissue, and create masked images at a given level of magnification from (a list of given) images.',
+	usage='segmentation.py -d/--slide_id -m/--model -z/--mask_magnification -p/--mpp_level_0 -g/--gpu_id -t/--tile_size -b/--batch_size; optional: -d/--slide_dir ; for help: -h/--help',
+	formatter_class=argparse.RawDescriptionHelpFormatter,
+	epilog=textwrap.dedent("Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan (s.w.vanderlaan-2@umcutrecht.nl) | Clint L. Miller | Yipei Song"))
+parser.add_argument('-d/--slide_dir', default='', help='path to WSIs dir', type=str, required=False)
+parser.add_argument('-s/--slide_id', default='*', type=str, help='slide filename ("*" for all slides)')
+parser.add_argument('-m/--model', default='./PathProfiler/tissue_segmentation/checkpoint_ts.pth', type=str)
+parser.add_argument('-z--mask_magnification', default=2.5, type=float)
+parser.add_argument('-p/--mpp_level_0', default=None, type=float)
+parser.add_argument('-g/--gpu_id', default='0', type=str)
+parser.add_argument('-t/--tile_size', default=512, type=int)
+parser.add_argument('-b/--batch_size', default=1, type=int)
 args = parser.parse_args()
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"  # see issue #152

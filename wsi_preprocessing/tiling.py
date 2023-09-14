@@ -32,27 +32,35 @@ from dataset import Whole_Slide_Bag
 from torch.utils.data import DataLoader
 
 def get_args_parser():
-    parser = argparse.ArgumentParser('segmentation', add_help=False)
+    # GENERAL
+    
+    # parser = argparse.ArgumentParser('segmentation', add_help=False)
+    parser = argparse.ArgumentParser(parents=[tiling.get_args_parser()],
+                                 prog='tiling',
+	description='This script will segment whole-slide images (.TIF or .ndpi) into tissue and non-tissue, and create masked images at a given level of magnification from (a list of given) images.',
+	usage='tiling.py -i/--index -n/--num_tasks -o/--output_dir -k/--masks_dir -c/--batch_size_tiling -e/--save_thumbnails; for help: -h/--help',
+	formatter_class=argparse.RawDescriptionHelpFormatter,
+	epilog=textwrap.dedent("Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan (s.w.vanderlaan-2@umcutrecht.nl) | Clint L. Miller | Yipei Song"))
 
     # JOB INDEX
-    parser.add_argument('-index', type=str, default=0, help='index of actual job')  
+    parser.add_argument('--index', type=str, default=0, help='index of actual job')  
     
     # NUMBER OF TASKS
-    parser.add_argument('-num_tasks', type=str, default=1, help='number of tasks')
+    parser.add_argument('--num_tasks', type=str, default=1, help='number of tasks')
 
     # SEGMENTATION OUTPUT DIRECTORY
-    parser.add_argument('-output_dir', type=str, default="/hpc/dhl_ec/fcisternino/ATHEROEXPRESS_PROCESSED/", 
+    parser.add_argument('--output_dir', type=str, default="/hpc/dhl_ec/fcisternino/ATHEROEXPRESS_PROCESSED/", 
                         help='root dir containing all the output results (to be created)')
 
     # MASKS DIR
-    parser.add_argument('-masks_dir', type=str, default="/hpc/dhl_ec/fcisternino/ATHEROEXPRESS_PROCESSED/masks/", 
+    parser.add_argument('--masks_dir', type=str, default="/hpc/dhl_ec/fcisternino/ATHEROEXPRESS_PROCESSED/masks/", 
                         help='directory where the black and white masks will be stored')
 
     # BATCH SIZE (tiles level)
-    parser.add_argument('-batch_size_tiling', type=int, default=512, help='batch size')
+    parser.add_argument('--batch_size_tiling', type=int, default=512, help='batch size')
 
     # SAVE THUMBNAILS
-    parser.add_argument('-save_thumbnails', default=True , help='whether to save segmentation thumbnails')
+    parser.add_argument('--save_thumbnails', default=True , help='whether to save segmentation thumbnails')
 
     return parser
 
