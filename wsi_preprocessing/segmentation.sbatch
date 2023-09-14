@@ -2,7 +2,7 @@
 #
 #SBATCH --job-name=evg_segmentation # set the name of the job
 #SBATCH --partition=cpu # set the partition for the job
-#SBATCH --array=0-9 # set the number of slides to be processed
+#SBATCH --array=0-9 # set the number of arrays; note that if the number of workers is set to 2, 2 WSI will be processed per array job, so 20 WSI will be processed in total
 #SBATCH --cpus-per-task=1 # set the number of cores
 #SBATCH --time=40:00:00 # set the total run time limit (HH:MM:SS)
 #SBATCH --output=/directory_where_the_wsi_are/logs_evg_segm/%a.log # make sure to create the logs_evg_segm folder first
@@ -36,4 +36,4 @@ python3 $CONVOCALS/wsi_preprocessing/segmentation.py \
 --slide_dir="${PROJECT_DIR}" \
 --output_dir="${PROJECT_DIR}/PROCESSED" \
 --masks_dir="${PROJECT_DIR}/PROCESSED/masks/" \
---model $CONVOCALS/wsi_preprocessing//PathProfiler/tissue_segmentation/checkpoint_ts.pth
+--model $CONVOCALS/wsi_preprocessing/PathProfiler/tissue_segmentation/checkpoint_ts.pth
