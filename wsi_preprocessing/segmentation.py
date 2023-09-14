@@ -369,7 +369,7 @@ def segmentation(chunk):
 
 if __name__ == '__main__':
     t = time.time()
-    DATA_FOLDER = '/hpc/dhl_ec/VirtualSlides/HE' # args.slide_dir # '/hpc/dhl_ec/VirtualSlides/HE'
+    DATA_FOLDER = args.slide_dir # '/hpc/dhl_ec/VirtualSlides/EVG' 
     chunk = get_chunk_AE( idx= int(args.index), num_tasks=int(args.num_tasks), dir = DATA_FOLDER )
     segmentation(chunk)
     tile_slides(args, chunk)
