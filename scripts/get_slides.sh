@@ -45,7 +45,7 @@ fi
 echo "Start the copying of WSI for [$STAIN]."
 for STUDYNUMBER in ${AE_list2461}; do
 
-    echo "> Copying slides for study [${STUDYNUMBER}] and stain [${STAIN}]"
+    echo "> Copying slides for studynumber [AE${STUDYNUMBER}] and stain [${STAIN}]"
     cp -v $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$STAIN/$WORKDIR
 
 done
