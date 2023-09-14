@@ -60,7 +60,7 @@ parser = argparse.ArgumentParser(parents=[tiling.get_args_parser()],
 parser.add_argument('-d/--slide_dir', default='', help='path to WSIs dir', type=str, required=False)
 parser.add_argument('-s/--slide_id', default='*', type=str, help='slide filename ("*" for all slides)')
 parser.add_argument('-m/--model', default='./PathProfiler/tissue_segmentation/checkpoint_ts.pth', type=str)
-parser.add_argument('-z--mask_magnification', default=2.5, type=float)
+parser.add_argument('-z/--mask_magnification', default=2.5, type=float)
 parser.add_argument('-p/--mpp_level_0', default=None, type=float)
 parser.add_argument('-g/--gpu_id', default='0', type=str)
 parser.add_argument('-t/--tile_size', default=512, type=int)
