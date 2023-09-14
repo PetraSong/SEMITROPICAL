@@ -4,7 +4,7 @@
 #SBATCH --array=0-9
 #SBATCH --cpus-per-task=1
 #SBATCH --time=40:00:00
-#SBATCH --output=./logs_evg_segm/%a.log
+#SBATCH --output=/hpc/dhl_ec/VirtualSlides/EVG/beautiful_plaques//logs_evg_segm/%a.log
 #SBATCH --mem=250000M
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=s.w.vanderlaan-2@umcutrecht.nl
