@@ -48,7 +48,7 @@ for STUDYNUMBER in ${AE_list2461}; do
     echo "> Copying slides for studynumber [AE${STUDYNUMBER}] and stain [${STAIN}]"
     # cp -v $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$STAIN/$WORKDIR
     ### reference to https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories
-    rsync -av --progress --partial --delete -h $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$STAIN/$WORKDIR
+    rsync -avz --progress --partial --delete -h $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$STAIN/$WORKDIR
 
 done
 
