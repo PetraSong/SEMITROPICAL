@@ -344,17 +344,11 @@ def segmentation(chunk):
           .format(args.model, checkpoint['epoch']))
 
     net.eval()
-    # You could get the following message:
-    # UserWarning: This DataLoader will create 4 worker processes in total. Our suggested 
-    # max number of worker in current system is 2, which is smaller than what this 
-    # DataLoader is going to create. Please be aware that excessive worker creation might 
-    # get DataLoader running slow or even freeze, lower the worker number to avoid 
-    # potential slowness/freeze if necessary.
     predictor = TilePrediction(patch_size=args.tile_size,
                                subdivisions=2.0,
                                pred_model=net,
                                batch_size=args.batch_size,
-                               workers=2)
+                               workers=self.workers)
 
     #############################################################################################  
 

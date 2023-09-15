@@ -91,7 +91,14 @@ def tile_slides(args, chunk):
         # Whole Slide Bag Dataset
         slide_dataset = Whole_Slide_Bag(slide, tile_size = args.tile_size, mask = mask)
         # Tiles Loader
-        tiles_loader = DataLoader(dataset= slide_dataset, batch_size=300, num_workers=4)
+        # You could get the following message:
+        # UserWarning: This DataLoader will create 4 worker processes in total. Our suggested 
+        # max number of worker in current system is 2, which is smaller than what this 
+        # DataLoader is going to create. Please be aware that excessive worker creation might 
+        # get DataLoader running slow or even freeze, lower the worker number to avoid 
+        # potential slowness/freeze if necessary.
+        # It's just a warning, but perhaps it is good to take note and keep `num_workers=2`
+        tiles_loader = DataLoader(dataset= slide_dataset, batch_size=300, num_workers=2)
         # Slidename without file extension
         tissue_name = slidename.split('/')[-2]
 
