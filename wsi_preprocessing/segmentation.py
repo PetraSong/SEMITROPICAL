@@ -348,7 +348,7 @@ def segmentation(chunk):
                                subdivisions=2.0,
                                pred_model=net,
                                batch_size=args.batch_size,
-                               workers=self.workers)
+                               workers=2)
 
     #############################################################################################  
 
