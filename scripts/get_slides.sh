@@ -46,7 +46,8 @@ echo "Start the copying of WSI for [$STAIN]."
 for STUDYNUMBER in ${AE_list2461}; do
 
     echo "> Copying slides for studynumber [AE${STUDYNUMBER}] and stain [${STAIN}]"
-    cp -v $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$STAIN/$WORKDIR
+    # cp -v $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$STAIN/$WORKDIR
+    rsync -av --progress -h $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$STAIN/$WORKDIR
 
 done
 
