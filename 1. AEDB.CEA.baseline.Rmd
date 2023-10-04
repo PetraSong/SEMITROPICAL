@@ -32,7 +32,7 @@ We will clean the environment, setup the locations, define colors, and create a 
 
 _Clean the environment._
 ```{r echo = FALSE}
-rm(list = ls())
+# rm(list = ls())
 ```
 
 _Set locations and working directories..._
@@ -58,8 +58,8 @@ source("scripts/pack01.packages.R")
 _We will create a datestamp and define the Utrecht Science Park Colour Scheme_.
 ```{r Setting: Colors}
 
-Today = format(as.Date(as.POSIXlt(Sys.time())), "%Y%m%d")
-Today.Report = format(as.Date(as.POSIXlt(Sys.time())), "%A, %B %d, %Y")
+# Today = format(as.Date(as.POSIXlt(Sys.time())), "%Y%m%d")
+# Today.Report = format(as.Date(as.POSIXlt(Sys.time())), "%A, %B %d, %Y")
 
 source("scripts/colors.R")
 
@@ -1231,6 +1231,45 @@ saveRDS(AEDB.CEA, file = paste0(OUT_loc, "/",Today,".",PROJECTNAME,".AEDB.CEA.RD
 ```
 
 
+## ExpressScan - Time to Event
+
+We check what the relation is between symptom type and the time to event. This is based on the 'latest' symptoms grouped in 4 groups (check *Re-assessed symptoms*).
+
+```{r}
+library(sjlabelled)
+AEDB.CEA$TimeOR_latest_4g <- as_numeric(AEDB.CEA$TimeOR_latest_4g)
+summary(AEDB.CEA$TimeOR_latest_4g)
+```
+
+
+```{r}
+attach(AEDB.CEA)
+AEDB.CEA[,"TimeOR_latest4G"] <- AEDB.CEA$TimeOR_latest_4g
+AEDB.CEA$TimeOR_latest4G[TimeOR_latest_4g == -999] <- NA
+AEDB.CEA$TimeOR_latest4G[TimeOR_latest_4g == -888] <- NA
+AEDB.CEA$TimeOR_latest4G[TimeOR_latest_4g < 0] <- NA
+detach(AEDB.CEA)
+
+summary(AEDB.CEA$TimeOR_latest4G)
+
+```
+
+```{r}
+compare_means(TimeOR_latest4G ~ indexsymptoms_latest_4g, data = AEDB.CEA %>% filter(!is.na(indexsymptoms_latest_4g)), method = "kruskal.test")
+ggpubr::ggboxplot(AEDB.CEA %>% filter(!is.na(indexsymptoms_latest_4g)), 
+                  x = c("indexsymptoms_latest_4g"),
+                  y = "TimeOR_latest4G", 
+                  xlab = "latest 'index' event prior to CEA",
+                  ylab = "time between 'index' event and CEA",
+                  color = "indexsymptoms_latest_4g",
+                  palette = "npg",
+                  add = "jitter") +
+  stat_compare_means(aes(group = indexsymptoms_latest_4g), label = "p.format", method = "kruskal.test")
+
+```
+
+
+
 ## ExpressScan - CONVOCALS sample list
 
 Here we create the CONVOCALS sample list to match/cross reference with the whole-slide images. This includes:
@@ -1384,8 +1423,8 @@ fwrite(CONVOCALS.samplelist.SMA,
 
 ------------------------------------------------------------------------------------------------------------------------
 
-    Version:      v1.0.5
-    Last update:  2023-08-10
+    Version:      v1.0.6
+    Last update:  2023-09-04
     Written by:   Sander W. van der Laan (s.w.vanderlaan-2[at]umcutrecht.nl).
     Description:  Script to get some Athero-Express Biobank Study baseline characteristics.
     Minimum requirements: R version 4.3.1 (2023-06-16) -- "Beagle Scouts", Mac OS X Sonoma (14.0, beta 5, 23A5312d)
@@ -1401,6 +1440,7 @@ fwrite(CONVOCALS.samplelist.SMA,
     _W_
 
     **Changes log**
+    * v1.0.6 Added time-to-event analysis with respect to symptoms.
     * v1.0.5 Added new SMA slides. Added baseline characteristics data.
     * v1.0.4 Updated AE database. Output includes IPH. Created list of samples without SMA slides.
     * v1.0.3 Updated AE database. Added function to randomly select multiplicate UPIDs.
