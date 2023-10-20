@@ -58,8 +58,8 @@ source("scripts/pack01.packages.R")
 _We will create a datestamp and define the Utrecht Science Park Colour Scheme_.
 ```{r Setting: Colors}
 
-# Today = format(as.Date(as.POSIXlt(Sys.time())), "%Y%m%d")
-# Today.Report = format(as.Date(as.POSIXlt(Sys.time())), "%A, %B %d, %Y")
+Today = format(as.Date(as.POSIXlt(Sys.time())), "%Y%m%d")
+Today.Report = format(as.Date(as.POSIXlt(Sys.time())), "%A, %B %d, %Y")
 
 source("scripts/colors.R")
 
@@ -1302,7 +1302,7 @@ CONVOCALS.samplelist.withduplicates <- subset(AEDB.CEA, select =
                                                   "OverallPlaquePhenotype", "Plaque_Vulnerability_Index",
                                                   "EP_composite", "EP_composite_time", "EP_major", "EP_major_time",
                                                   "sympt", "AsymptSympt", "AsymptSympt2G",  "Symptoms.5G", 
-                                                  "indexsymptoms_latest_4g", "Symptoms.Update2G", "Symptoms.Update3G") # new symptom-categories
+                                                  "indexsymptoms_latest_4g", "Symptoms.Update2G", "Symptoms.Update3G", "TimeOR_latest4G") # new symptom-categories
                                               )
 
 CONVOCALS.samplelist.withduplicates$arteryop <- to_factor(CONVOCALS.samplelist.withduplicates$arteryop)
@@ -1440,7 +1440,7 @@ fwrite(CONVOCALS.samplelist.SMA,
     _W_
 
     **Changes log**
-    * v1.0.6 Added time-to-event analysis with respect to symptoms.
+    * v1.0.6 Added time-to-event analysis with respect to symptoms. Add this to the output table.
     * v1.0.5 Added new SMA slides. Added baseline characteristics data.
     * v1.0.4 Updated AE database. Output includes IPH. Created list of samples without SMA slides.
     * v1.0.3 Updated AE database. Added function to randomly select multiplicate UPIDs.

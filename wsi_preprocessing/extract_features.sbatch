@@ -1,11 +1,16 @@
 #!/bin/bash
-#SBATCH --job-name=vit
-#SBATCH --partition=cpu
-#SBATCH --array=0-999
-#SBATCH --cpus-per-task=2
-#SBATCH --time=60:00:00
-#SBATCH --output=./logs_fe/%a.log
-#SBATCH --mem=200000M
+#
+#SBATCH --job-name=evg_feat # set the name of the job
+#SBATCH --partition=cpu # set the partition for the job
+#SBATCH --array=0-999 # set the number of array jobs to be executed; when there are 2 workers and 1000 slides, 2 slides will be processed per array job, so --array=0-499
+#SBATCH --cpus-per-task=2 # set the number of cores
+#SBATCH --time=60:00:00 # set the total run time limit (HH:MM:SS)
+#SBATCH --output=/directory_where_the_wsi_are/logs_evg_segm/%a.%j.%N.feat.log # make sure to create the logs_evg_segm folder first
+#SBATCH --error=/directory_where_the_wsi_are/logs_evg_segm/%a.%j.%N.feat.errors # make sure to create the logs_evg_segm folder first
+#SBATCH --mem=200G # set the memory limit
+#SBATCH --mail-type=ALL # select which email types will be sent (BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=your_email@domain.com # set destination email
+
 
 echo '----------------------------'
 echo ' JOB ID: '$SLURM_ARRAY_JOB_ID
@@ -18,6 +23,19 @@ echo ' TOTAL NUMBER OF TASKS: '$SLURM_ARRAY_TASK_COUNT
 echo '----------------------------'
 
 eval "$(conda shell.bash hook)"
+# conda  activate /hpc/dhl_ec/VirtualSlides/cglastonbury/wsi
+conda activate /hpc/local/Rocky8/dhl_ec/software/mambaforge3/envs/convocals
+# conda activate convocals
 
-conda  activate /hpc/dhl_ec/VirtualSlides/cglastonbury/wsi
-python3 extract_features.py  -index=$SLURM_ARRAY_TASK_ID -num_tasks=$SLURM_ARRAY_TASK_COUNT -features_extraction_checkpoint /hpc/dhl_ec/fcisternino/checkpoints/checkpoint_ViT_AT.pth
+H5_DIR=""
+SLIDE_DIR=""
+OUTPUT_DIR=""
+
+# edit the following line to run your script for the given paths and stain
+python3 extract_features.py \
+-index=$SLURM_ARRAY_TASK_ID \
+-num_tasks=$SLURM_ARRAY_TASK_COUNT \
+-h5_data=$H5_DIR \
+-slide_folder=$SLIDE_DIR \
+-features_extraction_checkpoint /hpc/dhl_ec/fcisternino/checkpoints/checkpoint_ViT_AT.pth \
+-output_dir=$OUTPUT_DIR 

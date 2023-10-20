@@ -1,3 +1,24 @@
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+print("                                                  Feature extraction")
+print("")
+print("* Version          : v1.0.0")
+print("")
+print("* Last update      : 2023-10-20")
+print("* Written by       : Francesco Cisternino")
+print("* Edite by         : Craig Glastonbury | Sander W. van der Laan | Clint L. Miller | Yipei Song.")
+print("")
+print("* Description      : Feature extraction pipeline to identify features in segmented whole-slide images (WSI) ")
+print("                     using the U-Net model.")
+# print("                     The pipeline is adapted from PathProfiler[1] which was trained on multiple tissue types including")
+# print("                     prostate and colon tissue to separate tissue from background.")
+# print("                     The output is a black and white mask. Batch size, tile size, and number of workers can be adjusted")
+# print("                     to fit the GPU memory. The default settings are for a 12GB GPU.")
+# print("                     Magnification, mpp, and tile size can be adjusted to fit the resolution of the input WSI. ")
+print("")
+print("                     [1] https://github.com/MaryamHaghighat/PathProfiler")
+print("")
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+
 import os
 import torch
 import argparse
@@ -27,20 +48,20 @@ def get_args_parser():
     parser.add_argument('-num_tasks', type=str, default=1, help='number of tasks')
     
     # DATA DIRECTORY
-    parser.add_argument('-h5_data', type=str, default="/hpc/dhl_ec/fcisternino/ATHEROEXPRESS_PROCESSED/patches/", 
+    parser.add_argument('-h5_data', type=str, default="/hpc/dhl_ec/VirtualSlides", 
                                                         help='path to directory containing h5 coordinates files')
 
     # DATA DIRECTORY
-    parser.add_argument('-slide_folder', type=str, default="/hpc/dhl_ec/VirtualSlides/HE/", 
+    parser.add_argument('-slide_folder', type=str, default="/hpc/dhl_ec/VirtualSlides", 
                                                         help='path to directory containing the slides')
 
 
     # FEATURES FILES SAVE DIR
-    parser.add_argument('-output_dir', type=str, default="/hpc/dhl_ec/fcisternino/ATHEROEXPRESS_PROCESSED/features_imagenet/", help='path to features .h5/.pt storage')
+    parser.add_argument('-output_dir', type=str, default="/hpc/dhl_ec/VirtualSlides", help='path to features .h5/.pt storage')
 
 
     # FEATURES EXTRACTION CHECKPOINT
-    parser.add_argument('-features_extraction_checkpoint', type=str, default="/home/f.cisternino/WSIproj/experiments/dinoExperiments/multiview_1/best_checkpoint.pt",
+    parser.add_argument('-features_extraction_checkpoint', type=str, default="/hpc/dhl_ec/fcisternino/checkpoints/checkpoint_ViT_AT.pth",
                     help='Checkpoint for the tiles features extraction model')
 
     # BATCH SIZE (tiles level)
@@ -58,8 +79,6 @@ def get_args_parser():
     parser.add_argument('-save_tiles', default=True , help='whether to save tiles images')
 
     return parser
-
-
 
 
 def extract_features(args, chunk):
@@ -145,7 +164,7 @@ def extract_features(args, chunk):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser('features-extraction', parents=[get_args_parser()])
     args = parser.parse_args()
-    files = glob.glob(os.path.join(args.slide_folder, '_tif/_images/*.TIF')) + glob.glob(os.path.join(args.slide_folder, '_ndpi/_images/*.ndpi'))
+    files = glob.glob(os.path.join(args.slide_folder, '/_images/*.TIF')) + glob.glob(os.path.join(args.slide_folder, '/_images/*.ndpi'))
 
     num_tasks = int(args.num_tasks)
     i = int(args.index)
@@ -158,3 +177,25 @@ if __name__ == "__main__":
     else:
         chunk = []
     extract_features(args, chunk)
+
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+print("+ The MIT License (MIT)                                                                                               +")
+print("+ Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan | Clint L. Miller | Yipei Song +")
+print("+                                                                                                                     +")
+print("+ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and                   +")
+print("+ associated documentation files (the \"Software\"), to deal in the Software without restriction, including           +")
+print("+ without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell             +")
+print("+ copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the            +")
+print("+ following conditions:                                                                                               +")
+print("+                                                                                                                     +")
+print("+ The above copyright notice and this permission notice shall be included in all copies or substantial                +")
+print("+ portions of the Software.                                                                                           +")
+print("+                                                                                                                     +")
+print("+ THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT             +")
+print("+ LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO           +")
+print("+ EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER           +")
+print("+ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR             +")
+print("+ THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                                          +")
+print("+                                                                                                                     +")
+print("+ Reference: http://opensource.org.                                                                                   +")
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")

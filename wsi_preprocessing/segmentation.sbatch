@@ -5,8 +5,8 @@
 #SBATCH --array=0-9 # set the number of array jobs to be executed; when there are 2 workers and 1000 slides, 2 slides will be processed per array job, so --array=0-499
 #SBATCH --cpus-per-task=1 # set the number of cores
 #SBATCH --time=40:00:00 # set the total run time limit (HH:MM:SS)
-#SBATCH --output=/directory_where_the_wsi_are/logs_evg_segm/%a.log # make sure to create the logs_evg_segm folder first
-#SBATCH --error=/directory_where_the_wsi_are/logs_evg_segm/%a.errors # make sure to create the logs_evg_segm folder first
+#SBATCH --output=/directory_where_the_wsi_are/logs_evg_segm/%a.%j.%N.segm.log # make sure to create the logs_evg_segm folder first
+#SBATCH --error=/directory_where_the_wsi_are/logs_evg_segm/%a.%j.%N.segm.errors # make sure to create the logs_evg_segm folder first
 #SBATCH --mem=250000M # set the memory limit
 #SBATCH --mail-type=ALL # select which email types will be sent (BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=your_email@domain.com # set destination email
@@ -28,7 +28,9 @@ PROJECT_DIR="/directory_where_the_wsi_are"
 # Load conda environment
 # make sure to create the proper environment first, and next activate it
 eval "$(conda shell.bash hook)"
-conda activate convocals
+# conda  activate /hpc/dhl_ec/VirtualSlides/cglastonbury/wsi
+conda activate /hpc/local/Rocky8/dhl_ec/software/mambaforge3/envs/convocals
+# conda activate convocals
 
 # edit the following line to run your script for the given paths and stain
 python3 $CONVOCALS/wsi_preprocessing/segmentation.py \
