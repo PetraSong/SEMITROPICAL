@@ -9,11 +9,6 @@ print("* Edite by         : Craig Glastonbury | Sander W. van der Laan | Clint L
 print("")
 print("* Description      : Feature extraction pipeline to identify features in segmented whole-slide images (WSI) ")
 print("                     using the U-Net model.")
-# print("                     The pipeline is adapted from PathProfiler[1] which was trained on multiple tissue types including")
-# print("                     prostate and colon tissue to separate tissue from background.")
-# print("                     The output is a black and white mask. Batch size, tile size, and number of workers can be adjusted")
-# print("                     to fit the GPU memory. The default settings are for a 12GB GPU.")
-# print("                     Magnification, mpp, and tile size can be adjusted to fit the resolution of the input WSI. ")
 print("")
 print("                     [1] https://github.com/MaryamHaghighat/PathProfiler")
 print("")
@@ -80,7 +75,7 @@ def get_args_parser():
 
     return parser
 
-
+# EXTRACT FEATURES
 def extract_features(args, chunk):
     print('Jobs starting...')
     # === DATA === #
@@ -91,9 +86,9 @@ def extract_features(args, chunk):
     features_extraction = features_extraction_class.model
     features_extraction.eval()
     features_extraction.to(DEVICE)
-
-
     
+    # === OUTPUT DIR === #
+    # create this when it does not exist
     os.makedirs(args.output_dir, exist_ok=True)
 
     temp_dir = os.path.join(args.output_dir, 'temp')
@@ -101,7 +96,6 @@ def extract_features(args, chunk):
     features_output_dir = os.path.join(args.output_dir)
     features_dir_h5 = os.path.join(features_output_dir, 'h5_files')
     features_dir_pt = os.path.join(features_output_dir, 'pt_files')
-
 
     os.makedirs(temp_dir, exist_ok=True)
     os.makedirs(features_output_dir, exist_ok=True)
@@ -160,7 +154,7 @@ def extract_features(args, chunk):
 
         print(f'Time required: {end - start}, shape: {features.shape}', flush=True)
                        
-
+# MAIN
 if __name__ == "__main__":
     parser = argparse.ArgumentParser('features-extraction', parents=[get_args_parser()])
     args = parser.parse_args()
