@@ -1,3 +1,20 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+print("                                         Main Modeling")
+print("")
+print("* Version          : v1.0.0")
+print("")
+print("* Last update      : 2023-10-03")
+print("* Written by       : Francesco Cisternino & Yipei (Petra) Song")
+print("* Edite by         : Craig Glastonbury | Sander W. van der Laan | Clint L. Miller | Yipei Song | Francesco Cisternino.")
+print("")
+print("* Description      : Main modeling.")
+print("")
+print("                     [1] https://github.com/MaryamHaghighat/PathProfiler")
+print("")
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+
 from __future__ import print_function
 
 import argparse
@@ -85,7 +102,9 @@ parser.add_argument('--label_frac', type=float, default=1.0,
                     help='fraction of training labels (default: 1.0)')
 parser.add_argument('--reg', type=float, default=1e-3,
                     help='weight decay (default: 1e-5)')
-## ???
+parser.add_argument('--csv_dataset', type=str, default="/hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/AtheroexpressCLAM/dataset_csv/WSI_gtex.csv", 
+                                                        help='path to file containing the csv with labels; this can be balanced or unbalanced depending on --task')
+## Specific settings
 parser.add_argument('--seed', type=int, default=1, 
                     help='random seed for reproducible experiment (default: 1)')
 parser.add_argument('--k', type=int, default=10, help='number of folds (default: 10)')
@@ -107,8 +126,9 @@ parser.add_argument('--model_type', type=str, choices=['clam_sb', 'clam_mb', 'mi
 parser.add_argument('--exp_code', type=str, help='experiment code for saving results')
 parser.add_argument('--weighted_sample', action='store_true', default=False, help='enable weighted sampling')
 parser.add_argument('--apply_bag_augmentation', action='store_true', default=False, help='enable weighted sampling')
-parser.add_argument('--model_size', type=str, choices=['small', 'big', 'dino_version'], default='dino_version', help='size of model, does not affect mil')
-parser.add_argument('--task', type=str, choices=['task_1_tumor_vs_normal',  'task_2_tumor_subtyping', 'wsi_classification', 'wsi_classification_binary'], default='wsi_classification')
+parser.add_argument('--model_size', type=str, choices=['small', 'big', 'dino_version','imagenet'], default='dino_version', help='size of model, does not affect mil')
+parser.add_argument('--task', type=str, choices=['task_1_tumor_vs_normal',  'task_2_tumor_subtyping', 'wsi_classification', 'wsi_classification_binary', 'wsi_classification_binary_eq'], default='wsi_classification')
+
 ### CLAM specific options
 parser.add_argument('--no_inst_cluster', action='store_true', default=False,
                      help='disable instance-level clustering')
@@ -187,7 +207,7 @@ elif args.task == 'task_2_tumor_subtyping':
 
 elif args.task == 'wsi_classification':
     args.n_classes = 6
-    dataset = Generic_MIL_Dataset(csv_path='./dataset_csv/AtheroExpress_WSI_dataset_binary.csv',
+    dataset = Generic_MIL_Dataset(csv_path=args.csv_dataset, # './dataset_csv/AtheroExpress_WSI_dataset_binary.csv',
                                             data_dir=os.path.join(args.data_root_dir, ''),
                                             shuffle=False,
                                             seed=args.seed,
@@ -199,14 +219,26 @@ elif args.task == 'wsi_classification':
 
 elif args.task == 'wsi_classification_binary':
     args.n_classes = 2
-    dataset = Generic_MIL_Dataset(csv_path='./dataset_csv/AtheroExpress_WSI_dataset_binary.csv',
+    dataset = Generic_MIL_Dataset(csv_path=args.csv_dataset, # './dataset_csv/AtheroExpress_FSMA_WSI_dataset_binary_IPH.csv',
                                             data_dir=os.path.join(args.data_root_dir, ''),
                                             shuffle=False,
                                             seed=args.seed,
                                             print_info=True,
-                                            label_dict = {'Asymptomatic':0, 'Symptomatic':1},
+                                            label_dict = {'no':0, 'yes':1},
                                             patient_strat=False,
                                             apply_bag_augmentation = args.apply_bag_augmentation,
+                                            ignore=[])
+
+elif args.task == 'wsi_classification_binary_eq':
+    args.n_classes = 2
+    dataset = Generic_MIL_Dataset(csv_path=args.csv_dataset, # './dataset_csv/AtheroExpress_SMA_WSI_dataset_binary_IPH_eq.csv',
+                                            data_dir=os.path.join(args.data_root_dir, ''),
+                                            shuffle=False,
+                                            seed=args.seed,
+                                            print_info=True,
+                                            label_dict = {'no':0, 'yes':1},
+                                            patient_strat=False,
+					    apply_bag_augmentation = args.apply_bag_augmentation,
                                             ignore=[])
 
 
@@ -248,4 +280,24 @@ if __name__ == "__main__":
     print("finished!")
     print("end script")
 
-
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+print("+ The MIT License (MIT)                                                                                               +")
+print("+ Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan | Clint L. Miller | Yipei Song +")
+print("+                                                                                                                     +")
+print("+ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and                   +")
+print("+ associated documentation files (the \"Software\"), to deal in the Software without restriction, including           +")
+print("+ without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell             +")
+print("+ copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the            +")
+print("+ following conditions:                                                                                               +")
+print("+                                                                                                                     +")
+print("+ The above copyright notice and this permission notice shall be included in all copies or substantial                +")
+print("+ portions of the Software.                                                                                           +")
+print("+                                                                                                                     +")
+print("+ THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT             +")
+print("+ LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO           +")
+print("+ EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER           +")
+print("+ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR             +")
+print("+ THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                                          +")
+print("+                                                                                                                     +")
+print("+ Reference: http://opensource.org.                                                                                   +")
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")

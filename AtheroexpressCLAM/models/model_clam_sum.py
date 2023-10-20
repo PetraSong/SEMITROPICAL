@@ -78,7 +78,7 @@ class CLAM_SB(nn.Module):
     def __init__(self, gate = True, size_arg = "small", dropout = False, k_sample=8, n_classes=2,
         instance_loss_fn=nn.CrossEntropyLoss(), subtyping=False):
         super(CLAM_SB, self).__init__()
-        self.size_dict = {"small": [1024, 512, 256], "big": [1024, 512, 384], "dino_version": [768, 512, 256]}
+        self.size_dict = {"small": [1024, 512, 256], "big": [1024, 512, 384], "dino_version": [768, 512, 256], "imagenet": [1000, 1024, 128]}
         size = self.size_dict[size_arg]
         fc = [nn.Linear(size[0], size[1]), nn.ReLU()]
         if dropout:
@@ -134,17 +134,18 @@ class CLAM_SB(nn.Module):
         # k_sample -> B (set to 8 as default)
         # h -> patch output features [K, 512]
         # top_p_ids -> indexes of the 8 highest scores of A
-        top_p_ids = torch.topk(A, self.k_sample)[1][-1]
+        k = min(A.size(-1), self.k_sample)
+        top_p_ids = torch.topk(A, k)[1][-1]
         # top_p contains the features of the 8 patches having the highest scores
         top_p = torch.index_select(h, dim=0, index=top_p_ids)
         # top_n_ids -> indexes of the 8 lowest scores of A
-        top_n_ids = torch.topk(-A, self.k_sample, dim=1)[1][-1]
+        top_n_ids = torch.topk(-A, k, dim=1)[1][-1]
         # top_n contains the features of the 8 patches having the lowest scores
         top_n = torch.index_select(h, dim=0, index=top_n_ids)
         # p_targets -> tensor of shape [1, k_sample] containing 1s (e.g.: [1,1,1,...,1]
-        p_targets = self.create_positive_targets(self.k_sample, device)
+        p_targets = self.create_positive_targets(k, device)
         # n_targets -> tensor of shape [1, k_sample] containing 0s (e.g.: [0,0,0,...,0]
-        n_targets = self.create_negative_targets(self.k_sample, device)
+        n_targets = self.create_negative_targets(k, device)
         # all_targets -> concatenation of p_targets and n_targets (e.g.: [1,1,1,...,1,0,0,0,...,0]
         all_targets = torch.cat([p_targets, n_targets], dim=0)
         idx = torch.randperm(all_targets.shape[0])
@@ -171,9 +172,14 @@ class CLAM_SB(nn.Module):
         device=h.device
         if len(A.shape) == 1:
             A = A.view(1, -1)
-        top_p_ids = torch.topk(A, self.k_sample)[1][-1]
+        #print(A.shape)
+        k = min(self.k_sample, A.size(-1))
+        top_p_ids = torch.topk(A, k)[1][-1]
+
+#        top_p_ids = torch.topk(A, self.k_sample)[1][-1]
         top_p = torch.index_select(h, dim=0, index=top_p_ids)
-        p_targets = self.create_negative_targets(self.k_sample, device)
+        p_targets = self.create_negative_targets(k, device)
+#        p_targets = self.create_negative_targets(self.k_sample, device)
         logits = classifier(top_p)
         p_preds = torch.topk(logits, 1, dim = 1)[1].squeeze(1)
         instance_loss = self.instance_loss_fn(logits, p_targets)
@@ -252,7 +258,7 @@ class CLAM_MB(CLAM_SB):
     def __init__(self, gate = True, size_arg = "small", dropout = False, k_sample=8, n_classes=2,
         instance_loss_fn=nn.CrossEntropyLoss(), subtyping=False):
         nn.Module.__init__(self)
-        self.size_dict = {"small": [1024, 512, 256], "big": [1024, 512, 384], "dino_version": [1000, 512, 256]}
+        self.size_dict = {"small": [1024, 512, 256], "big": [1024, 512, 384], "dino_version": [768, 512, 256], "imagenet": [1000, 1024, 128]}
         size = self.size_dict[size_arg]
         fc = [nn.Linear(size[0], size[1]), nn.ReLU()]
         if dropout:
