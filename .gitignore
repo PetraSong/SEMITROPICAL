@@ -80,9 +80,13 @@ _archive*
 # PolarMorphism/eur_w_ld_chr*
 # PolarMorphism/proxySearch_CAC_CAD*
 
-OUTPUT/20221011.CONVOCALS.samplelist.xlsx
+# Sample data
+20221011.CONVOCALS.samplelist.xlsx
 20230809.CONVOCALS.samplelist.noSMAslides.xlsx
 20230810.CONVOCALS.samplelist.withSMAslides.xlsx
 20230810.CONVOCALS.samplelist.xlsx
+20231004.CONVOCALS.samplelist.withSMAslides.xlsx 
+
+# checkpoints
 checkpoint_ts.pth
 checkpoint_106.pth
