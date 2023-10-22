@@ -27,12 +27,16 @@ eval "$(conda shell.bash hook)"
 conda activate /hpc/local/Rocky8/dhl_ec/software/mambaforge3/envs/convocals
 # conda activate convocals
 
+# edit the following line to set the path to the wsi_preprocessing folder
+CONVOCALS_PREPROCESSING_DIR="/hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/wsi_preprocessing"  
+
+# edit the following lines to set the paths to the h5 files, the slides, and the output folder
 H5_DIR=""
 SLIDE_DIR=""
 OUTPUT_DIR=""
 
 # edit the following line to run your script for the given paths and stain
-python3 extract_features.py \
+python3 $CONVOCALS_PREPROCESSING_DIR/extract_features.py \
 -index=$SLURM_ARRAY_TASK_ID \
 -num_tasks=$SLURM_ARRAY_TASK_COUNT \
 -h5_data=$H5_DIR \
