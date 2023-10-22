@@ -160,6 +160,7 @@ def extract_features(args, chunk):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser('features-extraction', parents=[get_args_parser()])
     args = parser.parse_args()
+    print("Checking contents of directory: ", args.slide_folder)
     files = glob.glob(os.path.join(args.slide_folder, '/_images/*.TIF')) + glob.glob(os.path.join(args.slide_folder, '/_images/*.ndpi'))
 
     num_tasks = int(args.num_tasks)
