@@ -35,11 +35,14 @@ H5_DIR="" # with slash at the end
 SLIDE_DIR="" # without slash at the end
 OUTPUT_DIR="" # with slash at the end
 
+# edit the following line to set the path to the checkpoint
+CHECKPOINT="/hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/AtheroExpressCLAM/checkpoints/checkpoint_ViT_AT.pth"
+
 # edit the following line to run your script for the given paths and stain
 python3 $CONVOCALS_PREPROCESSING_DIR/extract_features.py \
 -index=$SLURM_ARRAY_TASK_ID \
 -num_tasks=$SLURM_ARRAY_TASK_COUNT \
 -h5_data=$H5_DIR \
 -slide_folder=$SLIDE_DIR \
--features_extraction_checkpoint /hpc/dhl_ec/fcisternino/checkpoints/checkpoint_ViT_AT.pth \
+-features_extraction_checkpoint=$CHECKPOINT \
 -output_dir=$OUTPUT_DIR 
