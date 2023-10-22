@@ -160,12 +160,12 @@ def extract_features(args, chunk):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser('features-extraction', parents=[get_args_parser()])
     args = parser.parse_args()
-    print("Checking contents of directory: ", args.slide_folder, flush=True)
+    print("Checking existence of slides in directory [", args.slide_folder, "]", flush=True)
     files = glob.glob(os.path.join(args.slide_folder, '/_images/*.TIF')) + glob.glob(os.path.join(args.slide_folder, '/_images/*.ndpi'))
-
+    print(">>>DEBUG<<< Slides found:", files, flush=True)
     num_tasks = int(args.num_tasks)
     i = int(args.index)
-    print('Number of files:', len(files), flush=True)
+    print('Number of slides found:', len(files), flush=True)
     files_per_job = math.ceil(len(files)/num_tasks)
     chunks = [files[x:x+ files_per_job] for x in range(0, len(files), files_per_job )]
     if i < len(chunks):
