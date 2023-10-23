@@ -1369,6 +1369,110 @@ fwrite(CONVOCALS.samplelist,
 
 # Merge with stains
 
+## EVG samples
+
+```{r}
+EVG_slides <- openxlsx::read.xlsx(paste0(STAINS_loc, "/20231023_STAINS_on_HPC.xlsx"),
+                                      sheet = "EVG",
+                                      colNames = TRUE)
+EVG_slides$Order <- NULL
+head(EVG_slides)
+
+```
+
+```{r}
+CONVOCALS.samplelist.EVG <- merge(CONVOCALS.samplelist, EVG_slides, by.x = "STUDY_NUMBER", by.y = "STUDY_NUMBER", all.x = TRUE)
+
+```
+
+```{r}
+table(CONVOCALS.samplelist.EVG$STAIN, useNA = "ifany")
+
+table(CONVOCALS.samplelist.EVG$FileType, useNA = "ifany")
+
+table(CONVOCALS.samplelist.EVG$indexsymptoms_latest_4g, useNA = "ifany")
+
+table(CONVOCALS.samplelist.EVG$Symptoms.Update3G, useNA = "ifany")
+
+table(CONVOCALS.samplelist.EVG$Artery_summary, useNA = "ifany")
+```
+
+```{r}
+fwrite(subset(CONVOCALS.samplelist.EVG, is.na(STAIN)),
+       file = paste0(OUT_loc, "/", Today, ".CONVOCALS.samplelist.noEVGslides.csv"),
+       quote = TRUE,
+       sep = ",",
+       na = "NA",
+       row.names = FALSE,
+       col.names = TRUE,
+       showProgress = TRUE)
+
+fwrite(CONVOCALS.samplelist.EVG,
+       file = paste0(OUT_loc, "/", Today, ".CONVOCALS.samplelist.withEVGslides.csv"),
+       quote = TRUE,
+       sep = ",",
+       na = "NA",
+       row.names = FALSE,
+       col.names = TRUE,
+       showProgress = TRUE)
+
+```
+
+
+```{r}
+hs <- openxlsx::createStyle(
+  textDecoration = "BOLD"
+)
+openxlsx::write.xlsx(CONVOCALS.samplelist.EVG,
+       file = paste0(OUT_loc, "/", Today, ".CONVOCALS.samplelist.withEVGslides.xlsx"),
+       overwrite = TRUE,
+       sheetName = "EVG_SampleList",
+       tabColour = uithof_color[16],
+       creator = "Sander W. van der Laan",
+       headerStyle = hs,
+       keepNA = TRUE, na.string = "NA")
+
+```
+
+> Note: we have 17 samples where there are two pieces of the segments, or there are two scans. These are:
+> - 292	UPID00725	AE292.EVG.TIF
+> - 292	UPID00725	AE292.EVG.v2.ndpi
+> - 297	UPID00329	AE297.EVG.TIF
+> - 297	UPID00329	AE297.EVG.v2.ndpi
+> - 300	UPID01807	AE300.EVG.TIF
+> - 300	UPID01807	AE300.T03-24318.EVG.v2.ndpi
+> - 363	UPID00682	AE363.T04-09070.EVG.B.ndpi
+> - 363	UPID00682	AE363.T04-09070.EVG.A.ndpi
+> - 926	UPID00593	AE926.EVG.TIF
+> - 926	UPID00593	AE926.T05-10375.EVG.v2.ndpi
+> - 1565	UPID00947	AE1565.T07-14473.EVG.v2.ndpi
+> - 1565	UPID00947	AE1565.EVG.TIF
+> - 1645	UPID00700	AE1645.T07-10464.EVG.v2.ndpi
+> - 1645	UPID00700	AE1645.EVG.TIF
+> - 1671	UPID00420	AE1671.EVG.TIF
+> - 1671	UPID00420	AE1671.T07-15965.EVG.v2.ndpi
+> - 1672	UPID00688	AE1672.T07-15706.EVG.v2.ndpi
+> - 1672	UPID00688	AE1672.EVG.TIF
+> - 1676	UPID00083	AE1676.T07-13742.EVG.v2.ndpi
+> - 1676	UPID00083	AE1676.EVG.TIF
+> - 1811	UPID01881	AE1811.T07-14002.EVG.v2.ndpi
+> - 1811	UPID01881	AE1811.EVG.TIF
+> - 2039	UPID01975	AE2039.T08-20781.EVG.v2.ndpi
+> - 2039	UPID01975	AE2039.EVG.TIF
+> - 2040	UPID01976	AE2040.EVG.TIF
+> - 2040	UPID01976	AE2040.T08-20757.EVG.v2.ndpi
+> - 2083	UPID02217	AE2083.EVG.TIF
+> - 2083	UPID02217	AE2083.T09-16562.EVG.v2.ndpi
+> - 2289	UPID02336	AE2289.EVG.v2.ndpi
+> - 2289	UPID02336	AE2289.EVG.TIF
+> - 2298	UPID02363	AE2298.EVG.v2.ndpi
+> - 2298	UPID02363	AE2298.EVG.TIF
+> - 2343	UPID00927	AE2343.T09-31738.EVG.v2.ndpi
+> - 2343	UPID00927	AE2343.EVG.TIF
+> 
+> We need to choose which samples to use.
+
+
 ## HE samples
 
 ```{r}
@@ -1447,15 +1551,7 @@ SMA_slides <- openxlsx::read.xlsx(paste0(STAINS_loc, "/20231023_STAINS_on_HPC.xl
                                       sheet = "SMA",
                                       colNames = TRUE)
 SMA_slides$Order <- NULL
-# SMA_slides.raw[, "Slides" := "SMA"] 
-# names(SMA_slides.raw)[names(SMA_slides.raw) == "study_number_only"] <- "STUDY_NUMBER"
-# head(SMA_slides.raw)
-# library(dplyr)
-# library(stringr)
-# SMA_slides <- SMA_slides.raw %>% 
-#   mutate(across('STUDY_NUMBER', str_replace, 'AE', ''))
 head(SMA_slides)
-# rm(SMA_slides.raw)
 ```
 
 ```{r}
@@ -1515,7 +1611,7 @@ openxlsx::write.xlsx(CONVOCALS.samplelist.SMA,
 
 ------------------------------------------------------------------------------------------------------------------------
 
-    Version:      v1.0.7
+    Version:      v1.0.8
     Last update:  2023-10-23
     Written by:   Sander W. van der Laan (s.w.vanderlaan-2[at]umcutrecht.nl).
     Description:  Script to get some Athero-Express Biobank Study baseline characteristics.
@@ -1532,6 +1628,7 @@ openxlsx::write.xlsx(CONVOCALS.samplelist.SMA,
     _W_
 
     **Changes log**
+    * v1.0.8 Added EVG files, type, filename, and stain information.
     * v1.0.7 Check presence SMA and HE files, including type, filename, and stain. Added Excel-export.
     * v1.0.6 Added time-to-event analysis with respect to symptoms. Add this to the output table.
     * v1.0.5 Added new SMA slides. Added baseline characteristics data.
