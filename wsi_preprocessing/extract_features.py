@@ -77,7 +77,7 @@ def get_args_parser():
 
     # DEBUG
     parser.add_argument('-debug', default=False , help='Whether to print debug messages')
-    
+
     return parser
 
 # EXTRACT FEATURES
@@ -134,7 +134,7 @@ def extract_features(args, chunk):
         coords = get_coords_h5(h5_file)
 
         dataset = Tiles_Bag(slide=slide, tile_size = args.tile_size, transform=transform, h5=h5_file)
-        loader = DataLoader(dataset = dataset, batch_size = 200, num_workers=4)
+        loader = DataLoader(dataset=dataset, batch_size=200, num_workers=2)
     
         mode = 'w'
         f = torch.empty(0, 1000)
