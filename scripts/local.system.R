@@ -52,6 +52,12 @@ ifelse(!dir.exists(file.path(PROJECT_loc)),
        FALSE)
 ANALYSIS_loc = paste0(PROJECT_loc)
 
+cat("\n- stains directory\n")
+ifelse(!dir.exists(file.path(ANALYSIS_loc, "/STAINS")), 
+       dir.create(file.path(ANALYSIS_loc, "/STAINS")), 
+       FALSE)
+STAINS_loc = paste0(ANALYSIS_loc,"/STAINS")
+
 cat("\n- for plots\n")
 ifelse(!dir.exists(file.path(ANALYSIS_loc, "/PLOTS")), 
        dir.create(file.path(ANALYSIS_loc, "/PLOTS")), 

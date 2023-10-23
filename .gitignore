@@ -70,6 +70,7 @@ _gsdata_/
 *.sas7bdat
 *.log
 *.csv
+STAINS
 
 # Results
 _archive*
@@ -85,7 +86,9 @@ _archive*
 20230809.CONVOCALS.samplelist.noSMAslides.xlsx
 20230810.CONVOCALS.samplelist.withSMAslides.xlsx
 20230810.CONVOCALS.samplelist.xlsx
-20231004.CONVOCALS.samplelist.withSMAslides.xlsx 
+20231004.CONVOCALS.samplelist.withSMAslides.xlsx
+20231023.CONVOCALS.samplelist.withSMAslides.xlsx
+20231023.CONVOCALS.samplelist.withHEslides.xlsx
 
 # checkpoints
 checkpoint_ts.pth

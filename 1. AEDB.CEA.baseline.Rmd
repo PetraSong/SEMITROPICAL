@@ -52,7 +52,6 @@ _... and load those packages._
 ```{r loading_packages, message=FALSE, warning=FALSE}
 source("scripts/pack01.packages.R")
 
-
 ```
 
 _We will create a datestamp and define the Utrecht Science Park Colour Scheme_.
@@ -1368,19 +1367,95 @@ fwrite(CONVOCALS.samplelist,
 ```
 
 
-# Merge with SMA samples
+# Merge with stains
+
+## HE samples
 
 ```{r}
-SMA_slides.raw <- fread(paste0(OUT_loc, "/20230810.study_number_only_SMA.csv"))
-SMA_slides.raw[, "Slides" := "SMA"] 
-names(SMA_slides.raw)[names(SMA_slides.raw) == "study_number_only"] <- "STUDY_NUMBER"
-head(SMA_slides.raw)
-library(dplyr)
-library(stringr)
-SMA_slides <- SMA_slides.raw %>% 
-  mutate(across('STUDY_NUMBER', str_replace, 'AE', ''))
+HE_slides <- openxlsx::read.xlsx(paste0(STAINS_loc, "/20231023_STAINS_on_HPC.xlsx"),
+                                      sheet = "HE",
+                                      colNames = TRUE)
+HE_slides$Order <- NULL
+head(HE_slides)
+
+```
+
+```{r}
+CONVOCALS.samplelist.HE <- merge(CONVOCALS.samplelist, HE_slides, by.x = "STUDY_NUMBER", by.y = "STUDY_NUMBER", all.x = TRUE)
+
+```
+
+```{r}
+table(CONVOCALS.samplelist.HE$STAIN, useNA = "ifany")
+
+table(CONVOCALS.samplelist.HE$FileType, useNA = "ifany")
+
+table(CONVOCALS.samplelist.HE$indexsymptoms_latest_4g, useNA = "ifany")
+
+table(CONVOCALS.samplelist.HE$Symptoms.Update3G, useNA = "ifany")
+
+table(CONVOCALS.samplelist.HE$Artery_summary, useNA = "ifany")
+```
+
+```{r}
+fwrite(subset(CONVOCALS.samplelist.HE, is.na(STAIN)),
+       file = paste0(OUT_loc, "/", Today, ".CONVOCALS.samplelist.noHEslides.csv"),
+       quote = TRUE,
+       sep = ",",
+       na = "NA",
+       row.names = FALSE,
+       col.names = TRUE,
+       showProgress = TRUE)
+
+fwrite(CONVOCALS.samplelist.HE,
+       file = paste0(OUT_loc, "/", Today, ".CONVOCALS.samplelist.withHEslides.csv"),
+       quote = TRUE,
+       sep = ",",
+       na = "NA",
+       row.names = FALSE,
+       col.names = TRUE,
+       showProgress = TRUE)
+
+```
+
+
+```{r}
+hs <- openxlsx::createStyle(
+  textDecoration = "BOLD"
+)
+openxlsx::write.xlsx(CONVOCALS.samplelist.HE,
+       file = paste0(OUT_loc, "/", Today, ".CONVOCALS.samplelist.withHEslides.xlsx"),
+       overwrite = TRUE,
+       sheetName = "HE_SampleList",
+       tabColour = uithof_color[16],
+       creator = "Sander W. van der Laan",
+       headerStyle = hs,
+       keepNA = TRUE, na.string = "NA")
+
+```
+
+> Note: we have 3 samples where there are two pieces of the segments. These are:
+> - 1	UPID90067 AE1.T02-5340.B.HE.TIF AE1.T02-5340.A.HE.TIF
+> - 363	UPID00682 AE363.T04-09070.HE.B.ndpi AE363.T04-09070.HE.A.ndpi
+> - 921	UPID01421 AE921.T05-16731.HE.A.ndpi AE921.T05-16731.HE.B.ndpi
+
+
+## SMA samples
+
+```{r}
+SMA_slides <- openxlsx::read.xlsx(paste0(STAINS_loc, "/20231023_STAINS_on_HPC.xlsx"),
+                                      sheet = "SMA",
+                                      colNames = TRUE)
+SMA_slides$Order <- NULL
+# SMA_slides.raw[, "Slides" := "SMA"] 
+# names(SMA_slides.raw)[names(SMA_slides.raw) == "study_number_only"] <- "STUDY_NUMBER"
+# head(SMA_slides.raw)
+# library(dplyr)
+# library(stringr)
+# SMA_slides <- SMA_slides.raw %>% 
+#   mutate(across('STUDY_NUMBER', str_replace, 'AE', ''))
 head(SMA_slides)
-rm(SMA_slides.raw)
+# rm(SMA_slides.raw)
 ```
 
 ```{r}
@@ -1389,7 +1464,9 @@ CONVOCALS.samplelist.SMA <- merge(CONVOCALS.samplelist, SMA_slides, by.x = "STUD
 ```
 
 ```{r}
-table(CONVOCALS.samplelist.SMA$Slides, useNA = "ifany")
+table(CONVOCALS.samplelist.SMA$STAIN, useNA = "ifany")
+
+table(CONVOCALS.samplelist.SMA$FileType, useNA = "ifany")
 
 table(CONVOCALS.samplelist.SMA$indexsymptoms_latest_4g, useNA = "ifany")
 
@@ -1399,7 +1476,7 @@ table(CONVOCALS.samplelist.SMA$Artery_summary, useNA = "ifany")
 ```
 
 ```{r}
-fwrite(subset(CONVOCALS.samplelist.SMA, is.na(Slides)),
+fwrite(subset(CONVOCALS.samplelist.SMA, is.na(STAIN)),
        file = paste0(OUT_loc, "/", Today, ".CONVOCALS.samplelist.noSMAslides.csv"),
        quote = TRUE,
        sep = ",",
@@ -1419,12 +1496,27 @@ fwrite(CONVOCALS.samplelist.SMA,
 
 ```
 
+```{r}
+hs <- openxlsx::createStyle(
+  textDecoration = "BOLD"
+)
+openxlsx::write.xlsx(CONVOCALS.samplelist.SMA,
+       file = paste0(OUT_loc, "/", Today, ".CONVOCALS.samplelist.withSMAslides.xlsx"),
+       overwrite = TRUE,
+       sheetName = "SMA_SampleList",
+       tabColour = uithof_color[16],
+       creator = "Sander W. van der Laan",
+       headerStyle = hs,
+       keepNA = TRUE, na.string = "NA")
+
+```
+
 # Session information
 
 ------------------------------------------------------------------------------------------------------------------------
 
-    Version:      v1.0.6
-    Last update:  2023-09-04
+    Version:      v1.0.7
+    Last update:  2023-10-23
     Written by:   Sander W. van der Laan (s.w.vanderlaan-2[at]umcutrecht.nl).
     Description:  Script to get some Athero-Express Biobank Study baseline characteristics.
     Minimum requirements: R version 4.3.1 (2023-06-16) -- "Beagle Scouts", Mac OS X Sonoma (14.0, beta 5, 23A5312d)
@@ -1440,6 +1532,7 @@ fwrite(CONVOCALS.samplelist.SMA,
     _W_
 
     **Changes log**
+    * v1.0.7 Check presence SMA and HE files, including type, filename, and stain. Added Excel-export.
     * v1.0.6 Added time-to-event analysis with respect to symptoms. Add this to the output table.
     * v1.0.5 Added new SMA slides. Added baseline characteristics data.
     * v1.0.4 Updated AE database. Output includes IPH. Created list of samples without SMA slides.
