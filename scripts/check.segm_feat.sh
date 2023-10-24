@@ -200,7 +200,7 @@ for file in $first_part; do
     # if [[ -n $(find "$search_folder" -type f -name "$file.*") ]]; then
     if [[ -n $(find "$search_folder" -type f -name "$file*") ]]; then
       if [ "$debug" = true ]; then
-        echocyan "Found files matching '$file.*' in '$search_folder'."
+        echocyan "Found files matching '$file*' in '$search_folder'."
       fi
       found=true
     fi
