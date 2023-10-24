@@ -113,19 +113,39 @@ done
 progress_counter=0
 
 # Function to update and print the progress bar
+# update_progress() {
+#     local percentage="$1"  # Pass the progress percentage as an argument
+#     local bar_length=50   # Adjust the length of the progress bar
+
+#     # Calculate the number of bars to display
+#     local num_bars=$((percentage * bar_length / 100))
+
+#     # Create the progress bar
+#     local bar=$(printf "%-${num_bars}s" " ")
+#     local space=$(printf "%-$((bar_length - num_bars))s" " ")
+
+#     # Print the progress bar
+#     printf "Progress: [%s%s] %d%%\r" "$bar" "$space" "$percentage"
+# }
+
+# Function to print a progress bar
 update_progress() {
-    local percentage="$1"  # Pass the progress percentage as an argument
-    local bar_length=50   # Adjust the length of the progress bar
+    local progress="$1"  # Pass the progress value as an argument
+    local bar_length=50  # Adjust the length of the progress bar
+
+    # Ensure the progress value is within the range [0, 100]
+    progress=$((progress < 0 ? 0 : progress))
+    progress=$((progress > 100 ? 100 : progress))
 
     # Calculate the number of bars to display
-    local num_bars=$((percentage * bar_length / 100))
-
+    local num_bars=$((progress * bar_length / 100))
+    
     # Create the progress bar
     local bar=$(printf "%-${num_bars}s" " ")
     local space=$(printf "%-$((bar_length - num_bars))s" " ")
-
+    
     # Print the progress bar
-    printf "Progress: [%s%s] %d%%\r" "$bar" "$space" "$percentage"
+    printf "Progress: [%s%s] %d%%\r" "$bar" "$space" "$progress"
 }
 
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
