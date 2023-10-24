@@ -119,7 +119,7 @@ print_progress() {
     # Create the progress bar with dots
     local bar=""
     for ((i=0; i<num_bars; i++)); do
-        bar+="=="
+        bar+="="
     done
 
     # Calculate the number of spaces
@@ -216,7 +216,7 @@ for file in $first_part; do
   progress_percentage=$((progress_counter * 100 / ${#first_part}))
 
   # Update and print the progress bar
-  print_progress $progress_percentage $file
+  print_progress $progress_percentage
 done
 
 # Add this line to display 100% after processing
