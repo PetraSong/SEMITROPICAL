@@ -155,7 +155,7 @@ print_progress() {
     # Create the progress bar with dots
     local bar=""
     for ((i=0; i<num_bars; i++)); do
-        bar+="."
+        bar+="="
     done
 
     # Calculate the number of spaces
@@ -255,6 +255,8 @@ for file in $first_part; do
   print_progress $progress_percentage
 done
 
+# Add this line to display 100% after processing
+print_progress 100
 
 echo ""
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
