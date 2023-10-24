@@ -3,28 +3,20 @@
 # author: Sander W. van der Laan | s.w.vanderlaan-2@umcutrecht.nl
 # last update: 2023-10-23
 
-# Description:
-# This Bash script takes a folder path as a command-line argument and performs the following tasks:
-# - Extracts the first part of filenames in the specified folder, looking for strings that start with 'AE' followed by numbers.
-# - Searches for each extracted 'first_part' in a list of specified folders.
-# - Outputs messages indicating whether the 'first_part' was found in any of the search folders or not.
-# - You can use this script to quickly identify and locate files in multiple search folders based on the common
-#  pattern found at the beginning of the filenames in the source folder.
-
 ### Creating display functions
 ### Setting colouring
 NONE='\033[00m'
 BOLD='\033[1m'
-OPAQUE='\033[2m'
+# OPAQUE='\033[2m'
 FLASHING='\033[5m'
-UNDERLINE='\033[4m'
+# UNDERLINE='\033[4m'
 
 RED='\033[01;31m'
-GREEN='\033[01;32m'
-YELLOW='\033[01;33m'
-PURPLE='\033[01;35m'
+# GREEN='\033[01;32m'
+# YELLOW='\033[01;33m'
+# PURPLE='\033[01;35m'
 CYAN='\033[01;36m'
-WHITE='\033[01;37m'
+# WHITE='\033[01;37m'
 ### Regarding changing the 'type' of the things printed with 'echo'
 ### Refer to: 
 ### - http://askubuntu.com/questions/528928/how-to-do-underline-bold-italic-strikethrough-color-background-and-size-i
