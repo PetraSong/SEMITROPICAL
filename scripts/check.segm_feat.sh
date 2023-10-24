@@ -121,6 +121,26 @@ progress_counter=0
 # }
 
 # Function to print a progress bar
+# print_progress() {
+#     local progress="$1"  # Pass the progress value as an argument
+#     local bar_length=50  # Adjust the length of the progress bar
+
+#     # Ensure the progress value is within the range [0, 100]
+#     progress=$((progress < 0 ? 0 : progress))
+#     progress=$((progress > 100 ? 100 : progress))
+
+#     # Calculate the number of bars to display
+#     local num_bars=$((progress * bar_length / 100))
+    
+#     # Create the progress bar
+#     local bar=$(printf "%-${num_bars}s" " ")
+#     local space=$(printf "%-$((bar_length - num_bars))s" " ")
+    
+#     # Print the progress bar
+#     printf "Progress: [%s%s] %d%%\r" "$bar" "$space" "$progress"
+# }
+
+# Function to print a progress bar
 print_progress() {
     local progress="$1"  # Pass the progress value as an argument
     local bar_length=50  # Adjust the length of the progress bar
@@ -132,13 +152,23 @@ print_progress() {
     # Calculate the number of bars to display
     local num_bars=$((progress * bar_length / 100))
     
-    # Create the progress bar
-    local bar=$(printf "%-${num_bars}s" " ")
-    local space=$(printf "%-$((bar_length - num_bars))s" " ")
-    
+    # Create the progress bar with dots
+    local bar=""
+    for ((i=0; i<num_bars; i++)); do
+        bar+="."
+    done
+
+    # Calculate the number of spaces
+    local num_spaces=$((bar_length - num_bars))
+    local space=""
+    for ((i=0; i<num_spaces; i++)); do
+        space+=" "
+    done
+
     # Print the progress bar
-    printf "Progress: [%s%s] %d%%\r" "$bar" "$space" "$progress"
+    echo -ne "Progress: [$bar$space] $progress%\r"
 }
+
 
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
 echobold "              CHECK PROCESSING OF SEGMENTATION AND FEATURE EXTRACTION"
