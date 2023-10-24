@@ -199,10 +199,12 @@ for file in $first_part; do
   for search_folder in "${search_folders[@]}"; do
     # Use the 'find' command to search for files that match the pattern "AE1850.*" in the current search folder
     if find "$search_folder" -type f -name "$file.*" -print -quit | grep -q .; then
-      if [ "$debug" = true ]; then
-        echocyan "Found files matching '$file.*' in '$search_folder'."
-      fi
-      found=true
+        if [ "$debug" = true ]; then
+            echocyan "Found files matching '$file.*' in '$search_folder'."
+        fi
+        found=true
+    else 
+        echocyan "WARNING: No files matching '$file.*' in '$search_folder'."
     fi
   done
 
