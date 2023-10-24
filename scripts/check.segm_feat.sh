@@ -109,20 +109,23 @@ while [ "$#" -gt 0 ]; do
   esac
 done
 
-# Function to print a progress bar
-print_progress() {
-    local progress="$1"  # Pass the progress value as an argument
-    local bar_length=50  # Adjust the length of the progress bar
+# Initialize a counter for progress
+progress_counter=0
+
+# Function to update and print the progress bar
+update_progress() {
+    local percentage="$1"  # Pass the progress percentage as an argument
+    local bar_length=50   # Adjust the length of the progress bar
 
     # Calculate the number of bars to display
-    local num_bars=$((progress * bar_length / 100))
-    
+    local num_bars=$((percentage * bar_length / 100))
+
     # Create the progress bar
     local bar=$(printf "%-${num_bars}s" " ")
     local space=$(printf "%-$((bar_length - num_bars))s" " ")
-    
+
     # Print the progress bar
-    printf "Progress: [%s%s] %d%%\r" "$bar" "$space" "$progress"
+    printf "Progress: [%s%s] %d%%\r" "$bar" "$space" "$percentage"
 }
 
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
@@ -193,7 +196,6 @@ for file in $first_part; do
       if [ "$debug" = true ]; then
         echocyan "Found files matching '$file.*' in '$search_folder'."
       fi
-      print_progress $file
       found=true
     fi
   done
@@ -201,6 +203,14 @@ for file in $first_part; do
   if [ "$found" = false ]; then
     echo "WARNING: No files matching '$file.*' found in any search folder."
   fi
+  
+  # Increment the progress counter
+  ((progress_counter += 1))
+  # Calculate the progress percentage
+  progress_percentage=$((progress_counter * 100 / ${#first_part}))
+
+  # Update and print the progress bar
+  update_progress $progress_percentage
 done
 
 
