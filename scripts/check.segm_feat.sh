@@ -104,46 +104,10 @@ done
 # Initialize a counter for progress
 progress_counter=0
 
-# Function to update and print the progress bar
-# update_progress() {
-#     local percentage="$1"  # Pass the progress percentage as an argument
-#     local bar_length=50   # Adjust the length of the progress bar
-
-#     # Calculate the number of bars to display
-#     local num_bars=$((percentage * bar_length / 100))
-
-#     # Create the progress bar
-#     local bar=$(printf "%-${num_bars}s" " ")
-#     local space=$(printf "%-$((bar_length - num_bars))s" " ")
-
-#     # Print the progress bar
-#     printf "Progress: [%s%s] %d%%\r" "$bar" "$space" "$percentage"
-# }
-
-# Function to print a progress bar
-# print_progress() {
-#     local progress="$1"  # Pass the progress value as an argument
-#     local bar_length=50  # Adjust the length of the progress bar
-
-#     # Ensure the progress value is within the range [0, 100]
-#     progress=$((progress < 0 ? 0 : progress))
-#     progress=$((progress > 100 ? 100 : progress))
-
-#     # Calculate the number of bars to display
-#     local num_bars=$((progress * bar_length / 100))
-    
-#     # Create the progress bar
-#     local bar=$(printf "%-${num_bars}s" " ")
-#     local space=$(printf "%-$((bar_length - num_bars))s" " ")
-    
-#     # Print the progress bar
-#     printf "Progress: [%s%s] %d%%\r" "$bar" "$space" "$progress"
-# }
-
 # Function to print a progress bar
 print_progress() {
     local progress="$1"  # Pass the progress value as an argument
-    local bar_length=50  # Adjust the length of the progress bar
+    local bar_length=20  # Adjust the length of the progress bar
 
     # Ensure the progress value is within the range [0, 100]
     progress=$((progress < 0 ? 0 : progress))
@@ -155,7 +119,7 @@ print_progress() {
     # Create the progress bar with dots
     local bar=""
     for ((i=0; i<num_bars; i++)); do
-        bar+="="
+        bar+="=="
     done
 
     # Calculate the number of spaces
@@ -252,7 +216,7 @@ for file in $first_part; do
   progress_percentage=$((progress_counter * 100 / ${#first_part}))
 
   # Update and print the progress bar
-  print_progress $progress_percentage
+  print_progress $progress_percentage $file
 done
 
 # Add this line to display 100% after processing
