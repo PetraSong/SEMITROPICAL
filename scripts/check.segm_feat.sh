@@ -185,7 +185,7 @@ fi
 # In this case, it will extract strings that start with 'AE' followed by numbers.
 first_part=$(ls "$folder_path" | grep -oE 'AE[0-9]+')
 if [ "$debug" = true ]; then
-  echocyan "Checking files for studynumbers: \n$first_part"  # Debug line to display the samples to check
+  echocyan "Checking files for $(cat $first_part | wc -l) studynumbers."  # Debug line to display the samples to check
 fi
 
 # Iterate through each file in the source folder (first_part) and check if it exists in the search folders (search_folders)
