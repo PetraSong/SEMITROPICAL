@@ -193,7 +193,7 @@ for file in $first_part; do
       if [ "$debug" = true ]; then
         echocyan "Found files matching '$file.*' in '$search_folder'."
       fi
-      print_progress $i
+      print_progress $file
       found=true
     fi
   done
