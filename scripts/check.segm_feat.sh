@@ -184,8 +184,9 @@ fi
 # Use 'ls' to list the files in the folder and 'grep' to extract the desired pattern
 # In this case, it will extract strings that start with 'AE' followed by numbers.
 first_part=$(ls "$folder_path" | grep -oE 'AE[0-9]+')
+echobold "Checking files for $(ls "$folder_path" | grep -oE 'AE[0-9]+' | wc -l) studynumbers."
 if [ "$debug" = true ]; then
-  echocyan "Checking files for $(ls "$folder_path" | grep -oE 'AE[0-9]+' | wc -l) studynumbers."  # Debug line to display the samples to check
+  echocyan "Checking files for the following studynumbers: \n$first_part"  # Debug line to display the samples to check
 fi
 
 # Iterate through each file in the source folder (first_part) and check if it exists in the search folders (search_folders)
@@ -218,7 +219,13 @@ for file in $first_part; do
   print_progress $progress_percentage
 done
 
+# Add this line to display 100% after processing
+print_progress 100
 
+echo ""
+echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+echobold "Wow! That was a lot of work. All checks are complete. Let's have a beer, buddy!"
+date
 
 # for file in $first_part; do
 #   found=false
@@ -250,11 +257,3 @@ done
 #   # Update and print the progress bar
 #   print_progress $progress_percentage
 # done
-
-# Add this line to display 100% after processing
-print_progress 100
-
-echo ""
-echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-echobold "Wow! That was a lot of work. All checks are complete. Let's have a beer, buddy!"
-date
