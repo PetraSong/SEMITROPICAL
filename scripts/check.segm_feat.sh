@@ -129,7 +129,7 @@ progress_counter=0
 # }
 
 # Function to print a progress bar
-update_progress() {
+print_progress() {
     local progress="$1"  # Pass the progress value as an argument
     local bar_length=50  # Adjust the length of the progress bar
 
@@ -230,7 +230,7 @@ for file in $first_part; do
   progress_percentage=$((progress_counter * 100 / ${#first_part}))
 
   # Update and print the progress bar
-  update_progress $progress_percentage
+  print_progress $progress_percentage
 done
 
 
