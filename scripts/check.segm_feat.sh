@@ -198,8 +198,8 @@ for file in $first_part; do
 
   for search_folder in "${search_folders[@]}"; do
     # Use the 'find' command to search for files that match the pattern "AE####.*" in the current search folder
-    # if find "$search_folder" -type f -name "$file.*" -print -quit | grep -q .; then
-    if [[ -z $(find "$search_folder" -type f -name "$file") ]]; then
+    if find "$search_folder" -type f -name "$file.*" -print -quit | grep -q .; then
+    # if [[ -z $(find "$search_folder" -type f -name "$file") ]]; then
         if [ "$debug" = true ]; then
             echocyan "Found files matching '$file.*' in '$search_folder'."
         fi
