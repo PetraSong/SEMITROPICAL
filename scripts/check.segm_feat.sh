@@ -109,6 +109,22 @@ while [ "$#" -gt 0 ]; do
   esac
 done
 
+# Function to print a progress bar
+print_progress() {
+    local progress="$1"  # Pass the progress value as an argument
+    local bar_length=50  # Adjust the length of the progress bar
+
+    # Calculate the number of bars to display
+    local num_bars=$((progress * bar_length / 100))
+    
+    # Create the progress bar
+    local bar=$(printf "%-${num_bars}s" " ")
+    local space=$(printf "%-$((bar_length - num_bars))s" " ")
+    
+    # Print the progress bar
+    printf "Progress: [%s%s] %d%%\r" "$bar" "$space" "$progress"
+}
+
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
 echobold "              CHECK PROCESSING OF SEGMENTATION AND FEATURE EXTRACTION"
 echoitalic "                                    version 1.0"
@@ -177,6 +193,7 @@ for file in $first_part; do
       if [ "$debug" = true ]; then
         echocyan "Found files matching '$file.*' in '$search_folder'."
       fi
+      print_progress $i
       found=true
     fi
   done
@@ -189,5 +206,5 @@ done
 
 echo ""
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-echobold "Wow! That was a lot of work. All checks are complete for $stain_folder. Let's have a beer, buddy!"
+echobold "Wow! That was a lot of work. All checks are complete. Let's have a beer, buddy!"
 date
