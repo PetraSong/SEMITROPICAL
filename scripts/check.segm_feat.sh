@@ -189,27 +189,26 @@ if [ "$debug" = true ]; then
 fi
 
 # Iterate through each file in the source folder (first_part) and check if it exists in the search folders (search_folders)
-for search_folder in "${search_folders[@]}"; do
+for file in $first_part; do
   found=false
   if [ "$debug" = true ]; then
-    echocyan "Checking $file in search folder: $search_folder"
+    echocyan "Checking $file in search folders."  # Debug line to display the current search folder
   fi
 
-  # Iterate through files in the search folder
-  for found_file in "$search_folder"/*; do
-    if [[ "$found_file" == *"$file"* ]]; then
+  for search_folder in "${search_folders[@]}"; do
+    # Use the 'find' command to search for files that match the pattern "AE1850.*" in the current search folder
+    if find "$search_folder" -type f -name "$file.*" -print -quit | grep -q .; then
       if [ "$debug" = true ]; then
-        echocyan "Found files matching '$file' in '$search_folder'."
+        echocyan "Found files matching '$file.*' in '$search_folder'."
       fi
       found=true
-      break  # No need to check other files in this search folder
     fi
   done
 
   if [ "$found" = false ]; then
-    echo "WARNING: No files matching '$file' found in '$search_folder'."
+    echo "WARNING: No files matching '$file' found in any search folder."
   fi
-
+  
   # Increment the progress counter
   ((progress_counter += 1))
   # Calculate the progress percentage
@@ -217,8 +216,8 @@ for search_folder in "${search_folders[@]}"; do
 
   # Update and print the progress bar
   print_progress $progress_percentage
-
 done
+
 
 
 # for file in $first_part; do
