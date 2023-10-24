@@ -189,28 +189,27 @@ if [ "$debug" = true ]; then
 fi
 
 # Iterate through each file in the source folder (first_part) and check if it exists in the search folders (search_folders)
-for file in $first_part; do
+for search_folder in "${search_folders[@]}"; do
   found=false
   if [ "$debug" = true ]; then
-    echocyan "Checking $file in search folders."  # Debug line to display the current search folder
+    echocyan "Checking $file in search folder: $search_folder"
   fi
 
-  for search_folder in "${search_folders[@]}"; do
-    # Use the 'find' command to search for files that match the pattern "$file.*" in the current search folder
-    # if [[ -n $(find "$search_folder" -type f -name "$file.*") ]]; then
-    if [[ -z $(find "$search_folder" -type f -name "$file"*) ]]; then
-    # if ! find "$search_folder" -type f -name "$file*" >/dev/null; then
+  # Iterate through files in the search folder
+  for found_file in "$search_folder"/*; do
+    if [[ "$found_file" == *"$file"* ]]; then
       if [ "$debug" = true ]; then
-        echocyan "Found files matching '$file*' in '$search_folder'."
+        echocyan "Found files matching '$file' in '$search_folder'."
       fi
       found=true
+      break  # No need to check other files in this search folder
     fi
   done
 
   if [ "$found" = false ]; then
-    echo "WARNING: No files matching '$file.*' found in any search folder."
+    echo "WARNING: No files matching '$file' found in '$search_folder'."
   fi
-  
+
   # Increment the progress counter
   ((progress_counter += 1))
   # Calculate the progress percentage
@@ -218,7 +217,40 @@ for file in $first_part; do
 
   # Update and print the progress bar
   print_progress $progress_percentage
+
 done
+
+
+# for file in $first_part; do
+#   found=false
+#   if [ "$debug" = true ]; then
+#     echocyan "Checking $file in search folders."  # Debug line to display the current search folder
+#   fi
+
+#   for search_folder in "${search_folders[@]}"; do
+#     # Use the 'find' command to search for files that match the pattern "$file.*" in the current search folder
+#     # if [[ -n $(find "$search_folder" -type f -name "$file.*") ]]; then
+#     if [[ -z $(find "$search_folder" -type f -name "$file"*) ]]; then
+#     # if ! find "$search_folder" -type f -name "$file*" >/dev/null; then
+#       if [ "$debug" = true ]; then
+#         echocyan "Found files matching '$file*' in '$search_folder'."
+#       fi
+#       found=true
+#     fi
+#   done
+
+#   if [ "$found" = false ]; then
+#     echo "WARNING: No files matching '$file.*' found in any search folder."
+#   fi
+  
+#   # Increment the progress counter
+#   ((progress_counter += 1))
+#   # Calculate the progress percentage
+#   progress_percentage=$((progress_counter * 100 / ${#first_part}))
+
+#   # Update and print the progress bar
+#   print_progress $progress_percentage
+# done
 
 # Add this line to display 100% after processing
 print_progress 100
