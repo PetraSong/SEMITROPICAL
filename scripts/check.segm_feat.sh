@@ -189,7 +189,6 @@ if [ "$debug" = true ]; then
 fi
 
 # Iterate through each file in the source folder (first_part) and check if it exists in the search folders (search_folders)
-# for file in "${first_part[@]}"; do
 for file in $first_part; do
   found=false
   if [ "$debug" = true ]; then
@@ -198,7 +197,8 @@ for file in $first_part; do
 
   for search_folder in "${search_folders[@]}"; do
     # Use the 'find' command to search for files that match the pattern "$file.*" in the current search folder
-    if [[ -n $(find "$search_folder" -type f -name "$file.*") ]]; then
+    # if [[ -n $(find "$search_folder" -type f -name "$file.*") ]]; then
+    if [[ -n $(find "$search_folder" -type f -name "$file") ]]; then
       if [ "$debug" = true ]; then
         echocyan "Found files matching '$file.*' in '$search_folder'."
       fi
