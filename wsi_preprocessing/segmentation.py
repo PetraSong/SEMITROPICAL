@@ -60,21 +60,21 @@ from PathProfiler.tissue_segmentation.unet import UNet
 
 # for argument parser
 parser = argparse.ArgumentParser(parents=[tiling.get_args_parser()],
-                                 prog='Segmentation (masking)',
+                                 prog='Segmentation (masking) and tiling',
 	description='This script will segment whole-slide images (WSI), for example .TIF- or .ndpi-files, into tissue and non-tissue, and create masked images at a given level of magnification from (a list of given) images.',
 	usage='segmentation.py --slide_id --model --mask_magnification --mpp_level_0 --gpu_id --tile_size --batch_size; optional: --slide_dir; for help: -h/--help; for verbose (with extra debug information): -v/--verbose; for version information: -V/--version',
 	formatter_class=argparse.RawDescriptionHelpFormatter,
 	epilog=textwrap.dedent("Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan (s.w.vanderlaan-2@umcutrecht.nl) | Clint L. Miller | Yipei Song"), 
     add_help=True)
 
-parser.add_argument('-d', '--slide_dir', default='', type=str, help='The path to WSIs dir.', required=False)
-parser.add_argument('-s', '--slides', nargs='*', default=[], type=str, help='Slide filename(s) ("*" for all slides), for example path/IMG1.TIF path/IMG2.ndpi path/IMG3.TIF; the default is ` `.')
-parser.add_argument('-m', '--model', default='./PathProfiler/tissue_segmentation/checkpoint_ts.pth', type=str, help='The model file in .pth format; the default is `./PathProfiler/tissue_segmentation/checkpoint_ts.pth`.')
-parser.add_argument('-x', '--mask_magnification', default=2.5, type=float, help='The magnification power of the image masks, for example 2.5, 1.25; the default is `2.5`.')
-parser.add_argument('-l', '--mpp_level_0', default=None, type=float, help='Manually enter mpp at level 0 if not available in slide properties as `slide.mpp[MPP]`; the default is `None`.')
-parser.add_argument('-g', '--gpu_id', default='0', type=str, help='GPU id to use; the default is `1`.')
-parser.add_argument('-t', '--tile_size', default=512, type=int, help='The pixel size of the tiles; the default is `512`.')
-parser.add_argument('-b', '--batch_size', default=1, type=int, help='The batch size; the default is `1`.')
+parser.add_argument('--slide_dir', default='', type=str, help='The path to WSIs dir.', required=False)
+parser.add_argument('--slides', nargs='*', default=[], type=str, help='Slide filename(s) ("*" for all slides), for example path/IMG1.TIF path/IMG2.ndpi path/IMG3.TIF; the default is ` `.')
+parser.add_argument('--model', default='./PathProfiler/tissue_segmentation/checkpoint_ts.pth', type=str, help='The model file in .pth format; the default is `./PathProfiler/tissue_segmentation/checkpoint_ts.pth`.')
+parser.add_argument('--mask_magnification', default=2.5, type=float, help='The magnification power of the image masks, for example 2.5, 1.25; the default is `2.5`.')
+parser.add_argument('--mpp_level_0', default=None, type=float, help='Manually enter mpp at level 0 if not available in slide properties as `slide.mpp[MPP]`; the default is `None`.')
+parser.add_argument('--gpu_id', default='0', type=str, help='GPU id to use; the default is `1`.')
+parser.add_argument('--tile_size', default=512, type=int, help='The pixel size of the tiles; the default is `512`.')
+parser.add_argument('--batch_size', default=1, type=int, help='The batch size; the default is `1`.')
 parser.add_argument('-V', '--version', action='version', version='%(prog)s v1.0.1-2023-09-13', help="Show program's version number and exit.")
 
 args = parser.parse_args()

@@ -32,7 +32,7 @@ from torch.utils.data import DataLoader
 
 def get_args_parser():
     # GENERAL
-    parser = argparse.ArgumentParser('segmentation', add_help=False)
+    parser = argparse.ArgumentParser('Tiling', add_help=False)
 
     # JOB INDEX
     parser.add_argument('--index', default=0, help='Index of actual job to split the workload; the default is `0`.')  
@@ -137,7 +137,7 @@ def tile_slides(args, chunk):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser('segmentation', parents=[get_args_parser()])
+    parser = argparse.ArgumentParser('Tiling', parents=[get_args_parser()])
     args = parser.parse_args()
     # chunk = get_chunk('/group/glastonbury/GTEX-subset/', int(args.index), int(args.num_tasks))
     chunk = get_chunk('', int(args.index), int(args.num_tasks))
