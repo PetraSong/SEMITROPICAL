@@ -40,48 +40,48 @@ def get_args_parser():
     parser = argparse.ArgumentParser('Feature extraction', add_help=False)
 
     # JOB INDEX
-    parser.add_argument('-index', type=str, default=0, help='index of actual job')  
+    parser.add_argument('-index', type=str, default=0, help='Index of actual job.')  
     
     # NUMBER OF TASKS
-    parser.add_argument('-num_tasks', type=str, default=1, help='number of tasks')
+    parser.add_argument('-num_tasks', type=str, default=1, help='Number of tasks.')
     
     # DATA DIRECTORY
     parser.add_argument('-h5_data', type=str, default="/hpc/dhl_ec/VirtualSlides/STAIN/_images/patches_512", 
-                                                        help='path to directory containing h5 coordinates files')
+                                                        help='Path to directory containing h5 coordinates files.')
 
     # SLIDES DIRECTORY
     parser.add_argument('-slide_folder', type=str, default="/hpc/dhl_ec/VirtualSlides/STAIN/_images", 
-                                                        help='path to directory containing the slides')
+                                                        help='Path to directory containing the slides. This is the directory that contains the _images folder. If -slides is provided, this argument is ignored.')
     
     # SPECIFY SLIDES
-    parser.add_argument('-slides', type=str, nargs='+', help='Provide specific slides to process')
+    parser.add_argument('-slides', type=str, nargs='+', help='Provide specific slides to process. If this argument is provided, -slide_folder is ignored.')
 
     # FEATURES FILES SAVE DIR
-    parser.add_argument('-output_dir', type=str, default="/hpc/dhl_ec/VirtualSlides/STAIN/_images/features", help='path to features .h5/.pt storage')
+    parser.add_argument('-output_dir', type=str, default="/hpc/dhl_ec/VirtualSlides/STAIN/_images/features", help='Path to features .h5/.pt storage.')
 
     # FEATURES EXTRACTION CHECKPOINT
     parser.add_argument('-features_extraction_checkpoint', type=str, default="/hpc/dhl_ec/fcisternino/checkpoints/checkpoint_ViT_AT.pth",
-                    help='Checkpoint for the tiles features extraction model')
+                    help='Checkpoint for the tiles features extraction model.')
 
     # BATCH SIZE (tiles level)
     parser.add_argument('-batch_size', type=int, default=1,
-                        help='batch size (tiles)')
+                        help='Batch size (tiles)')
    # TILE SIZE
     parser.add_argument('-tile_size', type=int, default=512,
-                        help='batch size (related to the number of tiles that are processed by the network)')
+                        help='Tile size (related to the number of tiles that are processed by the network).')
 
    
     # SAVE FEATURES
-    parser.add_argument('-save_features', default=False , help='whether to save segmentation thumbnails')
+    parser.add_argument('-save_features', default=False, help='whether to save segmentation thumbnails.')
 
     # SAVE TILES
-    parser.add_argument('-save_tiles', default=True , help='whether to save tiles images')
+    parser.add_argument('-save_tiles', default=True, help='whether to save tiles images.')
 
     # DEBUG
-    parser.add_argument('-verbose', default=False , help='Whether to print debug messages')
+    parser.add_argument('-verbose', default=False, help='Whether to print debug messages.')
 
     # VERSION
-    parser.add_argument('-version', action='version', version='%(prog)s v1.0.0-2023-10-24')
+    parser.add_argument('-version', action='version', version='%(prog)s v1.0.0-2023-10-24', help='Show program version.')
 
     return parser
 
