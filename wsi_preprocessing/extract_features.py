@@ -34,7 +34,7 @@ import shutil
 import os
 import h5py
 
-
+# Arguments
 def get_args_parser():
     parser = argparse.ArgumentParser('segmentation', add_help=False)
 
@@ -45,17 +45,18 @@ def get_args_parser():
     parser.add_argument('-num_tasks', type=str, default=1, help='number of tasks')
     
     # DATA DIRECTORY
-    parser.add_argument('-h5_data', type=str, default="/hpc/dhl_ec/VirtualSlides", 
+    parser.add_argument('-h5_data', type=str, default="/hpc/dhl_ec/VirtualSlides/STAIN/_images/patches_512", 
                                                         help='path to directory containing h5 coordinates files')
 
-    # DATA DIRECTORY
-    parser.add_argument('-slide_folder', type=str, default="/hpc/dhl_ec/VirtualSlides", 
+    # SLIDES DIRECTORY
+    parser.add_argument('-slide_folder', type=str, default="/hpc/dhl_ec/VirtualSlides/STAIN/_images", 
                                                         help='path to directory containing the slides')
-
+    
+    # SPECIFY SLIDES
+    parser.add_argument('-slides', type=str, nargs='+', help='Specific slides to process')
 
     # FEATURES FILES SAVE DIR
-    parser.add_argument('-output_dir', type=str, default="/hpc/dhl_ec/VirtualSlides", help='path to features .h5/.pt storage')
-
+    parser.add_argument('-output_dir', type=str, default="/hpc/dhl_ec/VirtualSlides/STAIN/_images/features", help='path to features .h5/.pt storage')
 
     # FEATURES EXTRACTION CHECKPOINT
     parser.add_argument('-features_extraction_checkpoint', type=str, default="/hpc/dhl_ec/fcisternino/checkpoints/checkpoint_ViT_AT.pth",
@@ -172,6 +173,36 @@ if __name__ == "__main__":
     if args.debug:
         print("DEBUG <<>> Files found:", files)
     
+    num_tasks = int(args.num_tasks)
+    i = int(args.index)
+    print('Number of slides found:', len(files), flush=True)
+    files_per_job = math.ceil(len(files)/num_tasks)
+    chunks = [files[x:x+ files_per_job] for x in range(0, len(files), files_per_job )]
+    if i < len(chunks):
+        chunk = chunks[i]
+        print(f'Chunk {i}: {len(chunk)} slides', flush= True)
+    else:
+        chunk = []
+    extract_features(args, chunk)
+
+# MAIN
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser('features-extraction', parents=[get_args_parser()])
+    args = parser.parse_args()
+
+    if args.slides is not None:
+        # If specific slides are provided, use them instead of the slide_folder
+        files = args.slides
+    else:
+        if args.debug:
+            print("Checking existence of slides in directory [", args.slide_folder, "]", flush=True)
+        image_folder = os.path.join(args.slide_folder, '_images')
+        if args.debug:
+            print("DEBUG <<>> Image folder:", image_folder)
+        files = glob.glob(os.path.join(args.slide_folder, '_images/*.TIF')) + glob.glob(os.path.join(args.slide_folder, '_images/*.ndpi'))
+        if args.debug:
+            print("DEBUG <<>> Files found:", files)
+
     num_tasks = int(args.num_tasks)
     i = int(args.index)
     print('Number of slides found:', len(files), flush=True)
