@@ -204,6 +204,7 @@ for file in $first_part; do
         fi
     else 
         echocyan "WARNING: No files matching '$file.*' in '$search_folder'."
+        echocyan "Listing '$file.*' in $folder_path."
     fi
   done
 
