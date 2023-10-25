@@ -5,7 +5,7 @@ print("                                                  Feature extraction")
 print("")
 print("* Version          : v1.0.0")
 print("")
-print("* Last update      : 2023-10-20")
+print("* Last update      : 2023-10-25")
 print("* Written by       : Francesco Cisternino")
 print("* Edite by         : Craig Glastonbury | Sander W. van der Laan | Clint L. Miller | Yipei Song.")
 print("")
@@ -16,27 +16,43 @@ print("                     [1] https://github.com/MaryamHaghighat/PathProfiler"
 print("")
 print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
+# for file handling
 import os
-import torch
-import argparse
 import datetime
 import numpy as np
 import glob
+
+# for argument parser
+import argparse
+import textwrap
+
+# for openslide
 import openslide
 import math
+
+# for pytorch
+import torch
+
+# for h5py
 from segmentation_utils import get_coords_h5
 from segmentation_utils import save_hdf5
+import h5py
+
+# for feature extraction
 from model import FeaturesExtraction, FeaturesExtraction_IMAGENET
 from dataset import Tiles_Bag
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 import shutil
-import os
-import h5py
 
 # Arguments
 def get_args_parser():
-    parser = argparse.ArgumentParser('segmentation', add_help=False)
+    parser = argparse.ArgumentParser(prog='Feature extraction',
+	description='This script will extract features from segmented whole-slide images (WSI), for example .TIF- or .ndpi-files, from (a list of given) images.',
+	usage='extraction_feature.py -index -num_tasks -h5_data [-slide_folder | -slides] -output_dir -features_extraction_checkpoint -batch_size -tile_size -save_features -save_tiles; optional: for help: -h/--help; for verbose (with extra debug information): -verbose; for version information: -V/--version',
+	formatter_class=argparse.RawDescriptionHelpFormatter,
+	epilog=textwrap.dedent("Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan (s.w.vanderlaan-2@umcutrecht.nl) | Clint L. Miller | Yipei Song"), 
+    add_help=True)
 
     # JOB INDEX
     parser.add_argument('-index', type=str, default=0, help='index of actual job')  
@@ -69,7 +85,6 @@ def get_args_parser():
     parser.add_argument('-tile_size', type=int, default=512,
                         help='batch size (related to the number of tiles that are processed by the network)')
 
-   
     # SAVE FEATURES
     parser.add_argument('-save_features', default=False , help='whether to save segmentation thumbnails')
 
@@ -77,7 +92,10 @@ def get_args_parser():
     parser.add_argument('-save_tiles', default=True , help='whether to save tiles images')
 
     # DEBUG
-    parser.add_argument('-debug', default=False , help='Whether to print debug messages')
+    parser.add_argument('-verbose', default=False , help='Whether to print debug messages')
+
+    # VERSION
+    parser.add_argument('-V', '--version', action='version', version='%(prog)s v1.0.0-2023-10-24')
 
     return parser
 
@@ -160,31 +178,6 @@ def extract_features(args, chunk):
 
         print(f'Time required: {end - start}, shape: {features.shape}', flush=True)
                        
-# # MAIN
-# if __name__ == "__main__":
-#     parser = argparse.ArgumentParser('features-extraction', parents=[get_args_parser()])
-#     args = parser.parse_args()
-#     if args.debug:
-#         print("Checking existence of slides in directory [", args.slide_folder, "]", flush=True)
-#     image_folder = os.path.join(args.slide_folder, '_images')
-#     if args.debug:
-#         print("DEBUG <<>> Image folder:", image_folder)
-#     files = glob.glob(os.path.join(args.slide_folder, '_images/*.TIF')) + glob.glob(os.path.join(args.slide_folder, '_images/*.ndpi'))
-#     if args.debug:
-#         print("DEBUG <<>> Files found:", files)
-    
-#     num_tasks = int(args.num_tasks)
-#     i = int(args.index)
-#     print('Number of slides found:', len(files), flush=True)
-#     files_per_job = math.ceil(len(files)/num_tasks)
-#     chunks = [files[x:x+ files_per_job] for x in range(0, len(files), files_per_job )]
-#     if i < len(chunks):
-#         chunk = chunks[i]
-#         print(f'Chunk {i}: {len(chunk)} slides', flush= True)
-#     else:
-#         chunk = []
-#     extract_features(args, chunk)
-
 # MAIN
 if __name__ == "__main__":
     parser = argparse.ArgumentParser('features-extraction', parents=[get_args_parser()])
@@ -193,17 +186,17 @@ if __name__ == "__main__":
     if args.slides is not None:
         # If specific slides are provided, use them instead of the slide_folder
         files = args.slides
-        if args.debug:
-            print("DEBUG <<>> Files found:", files)
+        if args.verbose:
+            print("VERBOSE <<>> Files found:", files)
     else:
-        if args.debug:
-            print("Checking existence of slides in directory [", args.slide_folder, "]", flush=True)
+        if args.verbose:
+            print("VERBOSE <<>> Checking existence of slides in directory [", args.slide_folder, "]", flush=True)
         image_folder = os.path.join(args.slide_folder, '_images')
-        if args.debug:
-            print("DEBUG <<>> Image folder:", image_folder)
+        if args.verbose:
+            print("VERBOSE <<>> Image folder:", image_folder)
         files = glob.glob(os.path.join(args.slide_folder, '_images/*.TIF')) + glob.glob(os.path.join(args.slide_folder, '_images/*.ndpi'))
-        if args.debug:
-            print("DEBUG <<>> Files found:", files)
+        if args.verbose:
+            print("VERBOSE <<>> Files found:", files)
 
     num_tasks = int(args.num_tasks)
     i = int(args.index)

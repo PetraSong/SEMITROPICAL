@@ -60,11 +60,12 @@ from PathProfiler.tissue_segmentation.unet import UNet
 
 # for argument parser
 parser = argparse.ArgumentParser(parents=[tiling.get_args_parser()],
-                                 prog='segmentation',
+                                 prog='Segmentation (masking)',
 	description='This script will segment whole-slide images (WSI), for example .TIF- or .ndpi-files, into tissue and non-tissue, and create masked images at a given level of magnification from (a list of given) images.',
 	usage='segmentation.py --slide_id --model --mask_magnification --mpp_level_0 --gpu_id --tile_size --batch_size; optional: --slide_dir; for help: -h/--help; for verbose (with extra debug information): -v/--verbose; for version information: -V/--version',
 	formatter_class=argparse.RawDescriptionHelpFormatter,
-	epilog=textwrap.dedent("Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan (s.w.vanderlaan-2@umcutrecht.nl) | Clint L. Miller | Yipei Song"))
+	epilog=textwrap.dedent("Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan (s.w.vanderlaan-2@umcutrecht.nl) | Clint L. Miller | Yipei Song"), 
+    add_help=True)
 
 parser.add_argument('--slide_dir', default='', type=str, help='The path to WSIs dir.', required=False)
 parser.add_argument('--slide_id', default='*', type=str, help='Slide filename ("*" for all slides); the default is `*`.')
