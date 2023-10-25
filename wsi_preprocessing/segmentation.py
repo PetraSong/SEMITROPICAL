@@ -68,7 +68,7 @@ parser = argparse.ArgumentParser(parents=[tiling.get_args_parser()],
     add_help=True)
 
 parser.add_argument('--slide_dir', default='', type=str, help='The path to WSIs dir.', required=False)
-parser.add_argument('--slide_id', default='*', type=str, help='Slide filename ("*" for all slides); the default is `*`.')
+parser.add_argument('--slide_id', nargs='*', default=[], type=str, help='Slide filename ("*" for all slides); the default is ` `.')
 parser.add_argument('--model', default='./PathProfiler/tissue_segmentation/checkpoint_ts.pth', type=str, help='The model file in .pth format; the default is `./PathProfiler/tissue_segmentation/checkpoint_ts.pth`.')
 parser.add_argument('--mask_magnification', default=2.5, type=float, help='The magnification power of the image masks, for example 2.5, 1.25; the default is `2.5`.')
 parser.add_argument('--mpp_level_0', default=None, type=float, help='Manually enter mpp at level 0 if not available in slide properties as `slide.mpp[MPP]`; the default is `None`.')
@@ -377,7 +377,17 @@ def segmentation(chunk):
 
 if __name__ == '__main__':
     t = time.time()
-    DATA_FOLDER = args.slide_dir # '/hpc/dhl_ec/VirtualSlides/EVG' 
+    if args.slide_dir:
+        # Directory-based approach
+        DATA_FOLDER = args.slide_dir # '/hpc/dhl_ec/VirtualSlides/EVG' 
+        chunk = get_chunk_wsi(idx=int(args.index), num_tasks=int(args.num_tasks), dir=DATA_FOLDER)
+    elif args.slide_id:
+        # Slide ID-based approach
+        chunk = args.slide_id
+    else:
+        print("Error: You must provide either --slide_dir or --slide_id.")
+        sys.exit(1)
+
     chunk = get_chunk_wsi( idx= int(args.index), num_tasks=int(args.num_tasks), dir = DATA_FOLDER )
     print('Starting segmentation and tiling.')
     print('> segmentating image')
