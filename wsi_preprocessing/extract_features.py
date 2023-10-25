@@ -65,7 +65,7 @@ def get_args_parser():
 
     # BATCH SIZE (tiles level)
     parser.add_argument('-batch_size', type=int, default=1,
-                        help='Batch size (tiles)')
+                        help='Batch size (tiles).')
    # TILE SIZE
     parser.add_argument('-tile_size', type=int, default=512,
                         help='Tile size (related to the number of tiles that are processed by the network).')
