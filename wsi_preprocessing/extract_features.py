@@ -94,7 +94,7 @@ def get_args_parser():
     parser.add_argument('-verbose', default=False , help='Whether to print debug messages')
 
     # VERSION
-    parser.add_argument('-V', '--version', action='version', version='%(prog)s v1.0.0-2023-10-24')
+    parser.add_argument('-version', action='version', version='%(prog)s v1.0.0-2023-10-24')
 
     return parser
 
