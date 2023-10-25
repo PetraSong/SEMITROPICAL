@@ -53,7 +53,7 @@ def get_args_parser():
                                                         help='path to directory containing the slides')
     
     # SPECIFY SLIDES
-    parser.add_argument('-slides', type=str, nargs='+', help='Specific slides to process')
+    parser.add_argument('-slides', type=str, nargs='+', help='Provide specific slides to process')
 
     # FEATURES FILES SAVE DIR
     parser.add_argument('-output_dir', type=str, default="/hpc/dhl_ec/VirtualSlides/STAIN/_images/features", help='path to features .h5/.pt storage')
