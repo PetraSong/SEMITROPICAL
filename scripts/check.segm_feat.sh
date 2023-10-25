@@ -204,7 +204,9 @@ for file in $first_part; do
         fi
     else 
         echocyan "WARNING: No files matching '$file.*' in '$search_folder'."
-        echocyan "Listing '$file.*' in $folder_path."
+        echocyan "Listing '$file.*' in image folder:"
+        image_file="$folder_path/$file.*"
+        ls -lh $image_file
     fi
   done
 
