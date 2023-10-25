@@ -81,7 +81,7 @@ def get_args_parser():
     parser.add_argument('-verbose', default=False, help='Whether to print debug messages.')
 
     # VERSION
-    parser.add_argument('-version', action='version', version='%(prog)s v1.0.0-2023-10-24', help='Show program version.')
+    parser.add_argument('-version', action='version', version='%(prog)s v1.0.0-2023-10-24', help="Show program's version number and exit.")
 
     return parser
 
@@ -170,7 +170,7 @@ if __name__ == "__main__":
     # parser = argparse.ArgumentParser('features-extraction', parents=[get_args_parser()])
     parser = argparse.ArgumentParser('Feature extraction', parents=[get_args_parser()],
 	description='This script will extract features from segmented whole-slide images (WSI), for example .TIF- or .ndpi-files, from (a list of given) images.',
-	usage='extraction_feature.py -index -num_tasks -h5_data [-slide_folder | -slides] -output_dir -features_extraction_checkpoint -batch_size -tile_size -save_features -save_tiles; optional: for help: -help; for verbose (with extra debug information): -verbose; for version information: -version',
+	usage='extraction_feature.py -index -num_tasks -h5_data [-slide_folder | -slides] -output_dir -features_extraction_checkpoint -batch_size -tile_size -save_features -save_tiles; optional: for help: -h/--help; for verbose (with extra debug information): -verbose; for version information: -version',
 	formatter_class=argparse.RawDescriptionHelpFormatter,
 	epilog=textwrap.dedent("Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan (s.w.vanderlaan-2@umcutrecht.nl) | Clint L. Miller | Yipei Song"))
     args = parser.parse_args()

@@ -75,7 +75,7 @@ parser.add_argument('--mpp_level_0', default=None, type=float, help='Manually en
 parser.add_argument('--gpu_id', default='0', type=str, help='GPU id to use; the default is `1`.')
 parser.add_argument('--tile_size', default=512, type=int, help='The pixel size of the tiles; the default is `512`.')
 parser.add_argument('--batch_size', default=1, type=int, help='The batch size; the default is `1`.')
-parser.add_argument('-V', '--version', action='version', version='%(prog)s v1.0.1-2023-09-13')
+parser.add_argument('-V', '--version', action='version', version='%(prog)s v1.0.1-2023-09-13', help="Show program's version number and exit.")
 
 args = parser.parse_args()
 
