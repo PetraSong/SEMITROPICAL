@@ -388,7 +388,7 @@ if __name__ == '__main__':
         print("Error: You must provide either --slide_dir or --slide_id.")
         sys.exit(1)
 
-    chunk = get_chunk_wsi( idx= int(args.index), num_tasks=int(args.num_tasks), dir = DATA_FOLDER )
+    # chunk = get_chunk_wsi( idx= int(args.index), num_tasks=int(args.num_tasks), dir = DATA_FOLDER )
     print('Starting segmentation and tiling.')
     print('> segmentating image')
     segmentation(chunk)
