@@ -4,10 +4,10 @@
 #SBATCH --partition=cpu # set the partition for the job
 #SBATCH --array=0-999 # set the number of array jobs to be executed; when there are 2 workers and 1000 slides, 2 slides will be processed per array job, so --array=0-499
 #SBATCH --cpus-per-task=2 # set the number of cores
-#SBATCH --time=60:00:00 # set the total run time limit (HH:MM:SS)
+#SBATCH --time=08:00:00 # set the total run time limit (HH:MM:SS)
 #SBATCH --output=/directory_where_the_wsi_are/logs_evg_segm/%a.%j.%N.feat.log # make sure to create the logs_evg_segm folder first
 #SBATCH --error=/directory_where_the_wsi_are/logs_evg_segm/%a.%j.%N.feat.errors # make sure to create the logs_evg_segm folder first
-#SBATCH --mem=200G # set the memory limit
+#SBATCH --mem=16G # set the memory limit
 #SBATCH --mail-type=ALL # select which email types will be sent (BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=your_email@domain.com # set destination email
 
@@ -31,18 +31,33 @@ conda activate /hpc/local/Rocky8/dhl_ec/software/mambaforge3/envs/convocals
 CONVOCALS_PREPROCESSING_DIR="/hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/wsi_preprocessing"  
 
 # edit the following lines to set the paths to the h5 files, the slides, and the output folder
-H5_DIR="" # with slash at the end
-SLIDE_DIR="" # without slash at the end
-OUTPUT_DIR="" # with slash at the end
+H5_DIR="" # with slash at the end, e.g. "/hpc/dhl_ec/VirtualSlides/EVG/_images/PROCESSED/patches_512/"
+OUTPUT_DIR="" # with slash at the end, e.g. "/hpc/dhl_ec/VirtualSlides/EVG/_images/PROCESSED/features/"
+
+# where the slides are
+# you can choose to provide a whole directory, or a list of image-files
+SLIDE_DIR="" # without slash at the end, e.g. "/hpc/dhl_ec/VirtualSlides/EVG"
+IMG_FILES="/hpc/dhl_ec/VirtualSlides/EVG/_images/AE1398.UMC.EVG.TIF /hpc/dhl_ec/VirtualSlides/EVG/_images/AE1850.EVG.TIF /hpc/dhl_ec/VirtualSlides/EVG/_images/AE2540.EVG.TIF"
 
 # edit the following line to set the path to the checkpoint
 CHECKPOINT="/hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/AtheroExpressCLAM/checkpoints/checkpoint_ViT_AT.pth"
 
 # edit the following line to run your script for the given paths and stain
+
+# version with slide directory
 python3 $CONVOCALS_PREPROCESSING_DIR/extract_features.py \
 -index=$SLURM_ARRAY_TASK_ID \
 -num_tasks=$SLURM_ARRAY_TASK_COUNT \
 -h5_data=$H5_DIR \
 -slide_folder=$SLIDE_DIR \
+-features_extraction_checkpoint=$CHECKPOINT \
+-output_dir=$OUTPUT_DIR 
+
+# version with specific set of image-files
+python3 $CONVOCALS_PREPROCESSING_DIR/extract_features.py \
+-index=$SLURM_ARRAY_TASK_ID \
+-num_tasks=$SLURM_ARRAY_TASK_COUNT \
+-h5_data=$H5_DIR \
+-slides $IMG_FILES \
 -features_extraction_checkpoint=$CHECKPOINT \
 -output_dir=$OUTPUT_DIR 
