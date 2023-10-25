@@ -5,7 +5,7 @@ print("                                                  Feature extraction")
 print("")
 print("* Version          : v1.0.0")
 print("")
-print("* Last update      : 2023-10-25")
+print("* Last update      : 2023-10-20")
 print("* Written by       : Francesco Cisternino")
 print("* Edite by         : Craig Glastonbury | Sander W. van der Laan | Clint L. Miller | Yipei Song.")
 print("")
@@ -16,42 +16,27 @@ print("                     [1] https://github.com/MaryamHaghighat/PathProfiler"
 print("")
 print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
-# for file handling
 import os
+import torch
+import argparse
 import datetime
 import numpy as np
 import glob
-
-# for argument parser
-import argparse
-import textwrap
-
-# for openslide
 import openslide
 import math
-
-# for pytorch
-import torch
-
-# for h5py
 from segmentation_utils import get_coords_h5
 from segmentation_utils import save_hdf5
-import h5py
-
-# for feature extraction
 from model import FeaturesExtraction, FeaturesExtraction_IMAGENET
 from dataset import Tiles_Bag
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 import shutil
+import os
+import h5py
 
 # Arguments
 def get_args_parser():
-    parser = argparse.ArgumentParser(prog='Feature extraction',
-	description='This script will extract features from segmented whole-slide images (WSI), for example .TIF- or .ndpi-files, from (a list of given) images.',
-	usage='extraction_feature.py -index -num_tasks -h5_data [-slide_folder | -slides] -output_dir -features_extraction_checkpoint -batch_size -tile_size -save_features -save_tiles; optional: for help: -help; for verbose (with extra debug information): -verbose; for version information: -version',
-	formatter_class=argparse.RawDescriptionHelpFormatter,
-	epilog=textwrap.dedent("Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan (s.w.vanderlaan-2@umcutrecht.nl) | Clint L. Miller | Yipei Song"))
+    parser = argparse.ArgumentParser('Feature extraction', add_help=False)
 
     # JOB INDEX
     parser.add_argument('-index', type=str, default=0, help='index of actual job')  
@@ -84,6 +69,7 @@ def get_args_parser():
     parser.add_argument('-tile_size', type=int, default=512,
                         help='batch size (related to the number of tiles that are processed by the network)')
 
+   
     # SAVE FEATURES
     parser.add_argument('-save_features', default=False , help='whether to save segmentation thumbnails')
 
@@ -177,9 +163,15 @@ def extract_features(args, chunk):
 
         print(f'Time required: {end - start}, shape: {features.shape}', flush=True)
                        
+
 # MAIN
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser('features-extraction', parents=[get_args_parser()])
+    # parser = argparse.ArgumentParser('features-extraction', parents=[get_args_parser()])
+    parser = argparse.ArgumentParser('Feature extraction', parents=[get_args_parser()],
+	description='This script will extract features from segmented whole-slide images (WSI), for example .TIF- or .ndpi-files, from (a list of given) images.',
+	usage='extraction_feature.py -index -num_tasks -h5_data [-slide_folder | -slides] -output_dir -features_extraction_checkpoint -batch_size -tile_size -save_features -save_tiles; optional: for help: -help; for verbose (with extra debug information): -verbose; for version information: -version',
+	formatter_class=argparse.RawDescriptionHelpFormatter,
+	epilog=textwrap.dedent("Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan (s.w.vanderlaan-2@umcutrecht.nl) | Clint L. Miller | Yipei Song"))
     args = parser.parse_args()
 
     if args.slides is not None:
