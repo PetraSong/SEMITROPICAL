@@ -51,8 +51,7 @@ def get_args_parser():
 	description='This script will extract features from segmented whole-slide images (WSI), for example .TIF- or .ndpi-files, from (a list of given) images.',
 	usage='extraction_feature.py -index -num_tasks -h5_data [-slide_folder | -slides] -output_dir -features_extraction_checkpoint -batch_size -tile_size -save_features -save_tiles; optional: for help: -h/--help; for verbose (with extra debug information): -verbose; for version information: -V/--version',
 	formatter_class=argparse.RawDescriptionHelpFormatter,
-	epilog=textwrap.dedent("Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan (s.w.vanderlaan-2@umcutrecht.nl) | Clint L. Miller | Yipei Song"), 
-    add_help=True)
+	epilog=textwrap.dedent("Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan (s.w.vanderlaan-2@umcutrecht.nl) | Clint L. Miller | Yipei Song"))
 
     # JOB INDEX
     parser.add_argument('-index', type=str, default=0, help='index of actual job')  
