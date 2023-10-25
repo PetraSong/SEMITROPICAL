@@ -67,15 +67,49 @@ parser = argparse.ArgumentParser(parents=[tiling.get_args_parser()],
 	epilog=textwrap.dedent("Copyright (c) 2023 Francesco Cisternino | Craig Glastonbury | Sander W. van der Laan (s.w.vanderlaan-2@umcutrecht.nl) | Clint L. Miller | Yipei Song"), 
     add_help=True)
 
-parser.add_argument('--slide_dir', default='', type=str, help='The path to WSIs dir.', required=False)
-parser.add_argument('--slides', nargs='*', default=[], type=str, help='Slide filename(s) ("*" for all slides), for example path/IMG1.TIF path/IMG2.ndpi path/IMG3.TIF; the default is ` `.')
-parser.add_argument('--model', default='./PathProfiler/tissue_segmentation/checkpoint_ts.pth', type=str, help='The model file in .pth format; the default is `./PathProfiler/tissue_segmentation/checkpoint_ts.pth`.')
-parser.add_argument('--mask_magnification', default=2.5, type=float, help='The magnification power of the image masks, for example 2.5, 1.25; the default is `2.5`.')
-parser.add_argument('--mpp_level_0', default=None, type=float, help='Manually enter mpp at level 0 if not available in slide properties as `slide.mpp[MPP]`; the default is `None`.')
-parser.add_argument('--gpu_id', default='0', type=str, help='GPU id to use; the default is `1`.')
-parser.add_argument('--tile_size', default=512, type=int, help='The pixel size of the tiles; the default is `512`.')
-parser.add_argument('--batch_size', default=1, type=int, help='The batch size; the default is `1`.')
-parser.add_argument('-V', '--version', action='version', version='%(prog)s v1.0.1-2023-09-13', help="Show program's version number and exit.")
+# SLIDEDIR
+parser.add_argument('--slide_dir', type=str, 
+default='', 
+help='The path to WSIs dir. This is the directory that contains the _images folder. If -slides is provided, this argument is ignored.', 
+required=False)
+
+# SLIDES
+parser.add_argument('--slides', type=str, nargs='*', 
+default=[], 
+help='Slide filename(s) ("*" for all slides), for example path/IMG1.TIF path/IMG2.ndpi path/IMG3.TIF; the default is ` `. If this argument is provided, -slide_folder is ignored.')
+
+# MODEL
+parser.add_argument('--model', type=str, 
+default='./PathProfiler/tissue_segmentation/checkpoint_ts.pth', 
+help='The model file in .pth format; the default is `./PathProfiler/tissue_segmentation/checkpoint_ts.pth`.')
+
+# MASK MAGNIFICATION
+parser.add_argument('--mask_magnification', type=float, 
+default=2.5, help='The magnification power of the image masks, for example 2.5, 1.25; the default is `2.5`.')
+
+# MPP LEVEL 
+parser.add_argument('--mpp_level_0', type=float, 
+default=None, help='Manually enter mpp at level 0 if not available in slide properties as `slide.mpp[MPP]`; the default is `None`.')
+
+# GPU ID
+parser.add_argument('--gpu_id', type=str, 
+default='0', 
+help='GPU id to use; the default is `1`.')
+
+# TILE SIZE
+parser.add_argument('--tile_size', type=int, 
+default=512, 
+help='The pixel size of the tiles; the default is `512`.')
+
+# BATCH SIZE
+parser.add_argument('--batch_size', type=int, 
+default=1, 
+help='The batch size; the default is `1`.')
+
+# VERSION
+parser.add_argument('-V', '--version', action='version', 
+version='%(prog)s v1.0.1-2023-09-13', 
+help="Show program's version number and exit.")
 
 args = parser.parse_args()
 
@@ -381,11 +415,11 @@ if __name__ == '__main__':
         # Directory-based approach
         DATA_FOLDER = args.slide_dir # '/hpc/dhl_ec/VirtualSlides/EVG' 
         chunk = get_chunk_wsi(idx=int(args.index), num_tasks=int(args.num_tasks), dir=DATA_FOLDER)
-    elif args.slide_id:
+    elif args.slides:
         # Slide ID-based approach
-        chunk = args.slide_id
+        chunk = args.slides
     else:
-        print("Error: You must provide either --slide_dir or --slide_id.")
+        print("Error: You must provide either --slide_dir or --slides.")
         sys.exit(1)
 
     # chunk = get_chunk_wsi( idx= int(args.index), num_tasks=int(args.num_tasks), dir = DATA_FOLDER )
