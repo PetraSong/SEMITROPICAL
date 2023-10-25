@@ -160,30 +160,30 @@ def extract_features(args, chunk):
 
         print(f'Time required: {end - start}, shape: {features.shape}', flush=True)
                        
-# MAIN
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser('features-extraction', parents=[get_args_parser()])
-    args = parser.parse_args()
-    if args.debug:
-        print("Checking existence of slides in directory [", args.slide_folder, "]", flush=True)
-    image_folder = os.path.join(args.slide_folder, '_images')
-    if args.debug:
-        print("DEBUG <<>> Image folder:", image_folder)
-    files = glob.glob(os.path.join(args.slide_folder, '_images/*.TIF')) + glob.glob(os.path.join(args.slide_folder, '_images/*.ndpi'))
-    if args.debug:
-        print("DEBUG <<>> Files found:", files)
+# # MAIN
+# if __name__ == "__main__":
+#     parser = argparse.ArgumentParser('features-extraction', parents=[get_args_parser()])
+#     args = parser.parse_args()
+#     if args.debug:
+#         print("Checking existence of slides in directory [", args.slide_folder, "]", flush=True)
+#     image_folder = os.path.join(args.slide_folder, '_images')
+#     if args.debug:
+#         print("DEBUG <<>> Image folder:", image_folder)
+#     files = glob.glob(os.path.join(args.slide_folder, '_images/*.TIF')) + glob.glob(os.path.join(args.slide_folder, '_images/*.ndpi'))
+#     if args.debug:
+#         print("DEBUG <<>> Files found:", files)
     
-    num_tasks = int(args.num_tasks)
-    i = int(args.index)
-    print('Number of slides found:', len(files), flush=True)
-    files_per_job = math.ceil(len(files)/num_tasks)
-    chunks = [files[x:x+ files_per_job] for x in range(0, len(files), files_per_job )]
-    if i < len(chunks):
-        chunk = chunks[i]
-        print(f'Chunk {i}: {len(chunk)} slides', flush= True)
-    else:
-        chunk = []
-    extract_features(args, chunk)
+#     num_tasks = int(args.num_tasks)
+#     i = int(args.index)
+#     print('Number of slides found:', len(files), flush=True)
+#     files_per_job = math.ceil(len(files)/num_tasks)
+#     chunks = [files[x:x+ files_per_job] for x in range(0, len(files), files_per_job )]
+#     if i < len(chunks):
+#         chunk = chunks[i]
+#         print(f'Chunk {i}: {len(chunk)} slides', flush= True)
+#     else:
+#         chunk = []
+#     extract_features(args, chunk)
 
 # MAIN
 if __name__ == "__main__":
@@ -193,6 +193,8 @@ if __name__ == "__main__":
     if args.slides is not None:
         # If specific slides are provided, use them instead of the slide_folder
         files = args.slides
+        if args.debug:
+            print("DEBUG <<>> Files found:", files)
     else:
         if args.debug:
             print("Checking existence of slides in directory [", args.slide_folder, "]", flush=True)
