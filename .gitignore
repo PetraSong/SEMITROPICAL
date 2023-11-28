@@ -94,3 +94,5 @@ AtheroExpressCLAM/eval_results/*
 AtheroExpressCLAM/eval_results/**
 AtheroExpressCLAM/results/**
 AtheroExpressCLAM/checkpoints
+AtheroExpressCLAM/results
+AtheroExpressCLAM/eval_results
