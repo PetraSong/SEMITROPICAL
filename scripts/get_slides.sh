@@ -99,6 +99,12 @@ WORKDIR="_images"
     # SR_POLARIZED
     # VONWILLEBRANDFACTOR
 
+# Check if any command line options are provided
+if [ "$#" -eq 0 ]; then
+  echo "Error: No options provided. Use -h or --help for usage information."
+  exit 1
+fi
+
 # Command line options
 while [[ "$#" -gt 0 ]]; do
   case $1 in
@@ -131,9 +137,10 @@ echo "Start the copying of WSI for [$STAIN]."
 for STUDYNUMBER in $SAMPLE_LIST; do
 
     echo "> Copying slides for studynumber [AE${STUDYNUMBER}] and stain [${STAIN}]"
+    ### Uncomment the following line to perform the actual copy
     # cp -v $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$STAIN/$WORKDIR
     ### reference to https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories
-    rsync -avz --progress --partial --delete -h $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$STAIN/$WORKDIR
+    # rsync -avz --progress --partial --delete -h $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$STAIN/$WORKDIR
 
 done
 

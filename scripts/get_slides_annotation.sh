@@ -88,6 +88,12 @@ WORKDIR="ANNOTATIONS"
     # SR
     # SR_POLARIZED
 
+# Check if any command line options are provided
+if [ "$#" -eq 0 ]; then
+  echo "Error: No options provided. Use -h or --help for usage information."
+  exit 1
+fi
+
 # Command line options
 while [[ "$#" -gt 0 ]]; do
   case $1 in
