@@ -89,3 +89,8 @@ _archive*
 # checkpoints
 checkpoint_ts.pth
 checkpoint_106.pth
+AtheroExpressCLAM/results/*
+AtheroExpressCLAM/eval_results/*
+AtheroExpressCLAM/eval_results/**
+AtheroExpressCLAM/results/**
+AtheroExpressCLAM/checkpoints
