@@ -73,7 +73,7 @@ SAMPLE_LIST="4609 916 411 165 906 1527 797 1868 999 1789 335 247 421 1798 565 14
 # Here we set some directories
 BULKDIR="/data/isi/d/dhl/ec/VirtualSlides/AE-SLIDES/"
 VIRTUALSLIDESDIR="/hpc/dhl_ec/VirtualSlides"
-WORKDIR="_images"
+WORKDIR="_images_dropzone"
 
 # Here we copy for a given stain the slides from the bulk directory to the virtual slides directory
 # Stains are:
@@ -138,8 +138,22 @@ for STUDYNUMBER in $SAMPLE_LIST; do
 
     echo "> Copying slides for studynumber [AE${STUDYNUMBER}] and stain [${STAIN}]"
     ### Uncomment the following line to perform the actual copy
-    # cp -v $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$STAIN/$WORKDIR
+    cp -v $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$STAIN/$WORKDIR
     ### reference to https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories
+    ### --delete: In order to keep two directories truly in sync, it’s necessary to delete files 
+    ###         from the destination directory if they are removed from the source. 
+    ###         By default, rsync does not delete anything from the destination directory.
+    ### --partial: Tells rsync to keep partially transferred files (and upon resume 
+    ###         rsync will use partially transferred files always after checksumming safely)
+    ### --progress: This option tells rsync to print information showing the progress of the transfer.
+    ### --human-readable/-h: Output numbers in a more human-readable format.
+    ### --archive/-a: This is equivalent to -rlptgoD. It is a quick way of saying you want recursion 
+    ###         and want to preserve almost everything (with -H being a notable omission). 
+    ###         The only exception to the above equivalence is when --files-from is specified, 
+    ###         in which case -r is not implied.
+    ### --verbose/-v: This option increases the amount of information you are given during the transfer.
+    ### --compress/-z: With this option, rsync compresses the file data as it is sent to the destination machine, 
+    ###         which reduces the amount of data being transmitted -- something that is useful over a slow connection.
     # rsync -avz --progress --partial --delete -h $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$STAIN/$WORKDIR
 
 done
