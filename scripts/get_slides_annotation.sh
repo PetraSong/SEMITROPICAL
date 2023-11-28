@@ -134,7 +134,7 @@ for STUDYNUMBER in $SAMPLE_LIST; do
 
     echo "> Copying slides for studynumber [AE${STUDYNUMBER}] and stain [${STAIN}]"
     ### Uncomment the following line to perform the actual copy
-    cp -v $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$STAIN/$WORKDIR
+    cp -v $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$WORKDIR/$STAIN/
     ### reference to https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories
     ### --delete: In order to keep two directories truly in sync, it’s necessary to delete files 
     ###         from the destination directory if they are removed from the source. 
@@ -150,7 +150,7 @@ for STUDYNUMBER in $SAMPLE_LIST; do
     ### --verbose/-v: This option increases the amount of information you are given during the transfer.
     ### --compress/-z: With this option, rsync compresses the file data as it is sent to the destination machine, 
     ###         which reduces the amount of data being transmitted -- something that is useful over a slow connection.
-    # rsync -avz --progress --partial --delete -h $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$WORKDIR/$STAIN
+    # rsync -avz --progress --partial --delete -h $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$WORKDIR/$STAIN/
 
 done
 
