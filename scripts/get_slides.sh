@@ -138,7 +138,7 @@ for STUDYNUMBER in $SAMPLE_LIST; do
 
     echo "> Copying slides for studynumber [AE${STUDYNUMBER}] and stain [${STAIN}]"
     ### Uncomment the following line to perform the actual copy
-    cp -v $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$STAIN/$WORKDIR/
+    cp -nv $BULKDIR/$STAIN/AE${STUDYNUMBER}.* $VIRTUALSLIDESDIR/$STAIN/$WORKDIR/
     ### reference to https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories
     ### --delete: In order to keep two directories truly in sync, it’s necessary to delete files 
     ###         from the destination directory if they are removed from the source. 
