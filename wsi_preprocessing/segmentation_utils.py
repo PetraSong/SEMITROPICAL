@@ -102,8 +102,13 @@ def get_chunk_wsi(idx, num_tasks, dir):
 
     chunk = []
     slides = []
-
-    slides = glob.glob(os.path.join(dir, '*.ndpi')) + glob.glob(os.path.join(dir, '*.TIF'))
+    
+    if os.path.exists(os.path.join(dir, '_ndpi')):
+        print('_ndpi found')
+        slides += glob.glob(os.path.join(dir, '_ndpi/*.ndpi'))
+    if os.path.exists(os.path.join(dir, '_tif')):
+        print('_tif found')
+        slides += glob.glob(os.path.join(dir, '_tif/*.TIF'))
 
     print('Number of slides:', len(slides), flush=True)
     slides_per_job = math.ceil(len(slides)/num_tasks)

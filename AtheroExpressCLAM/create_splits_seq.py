@@ -113,7 +113,8 @@ if __name__ == '__main__':
         label_fracs = [0.1, 0.25, 0.5, 0.75, 1.0]
     
     for lf in label_fracs:
-        split_dir = 'splits_SMA_IPH/'+ str(args.task) + '_{}'.format(int(lf * 100))+'_k'+str(args.k)
+        # split_dir = 'splits_SMA_IPH/'+ str(args.task) + '_{}'.format(int(lf * 100))+'_k'+str(args.k)
+        split_dir = os.path.dirname(args.csv_dataset) + "/" + str(args.task) + '_{}'.format(int(lf * 100))+'_k'+str(args.k)
         os.makedirs(split_dir, exist_ok=True)
         dataset.create_splits(k = args.k, val_num = val_num, test_num = test_num, label_frac=lf)
         for i in range(args.k):

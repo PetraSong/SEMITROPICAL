@@ -6,6 +6,7 @@ import pdb
 import os
 import pandas as pd
 from utils.utils import *
+import PIL
 from PIL import Image
 from math import floor
 import matplotlib.pyplot as plt
@@ -83,3 +84,20 @@ def compute_from_patches(wsi_object, features, coords, clam_pred=None, model=Non
 
         mode = "a"
     return attn_save_path, feat_save_path, wsi_object
+
+def slide_to_scaled_pil_image(slide, SCALE_FACTOR=32):
+    """
+    Convert a WSI slide to a scaled-down PIL image.
+    Args:
+        slide: An OpenSlide object.
+    Returns:
+        Tuple consisting of scaled-down PIL image, original width, original height, new width, and new height.
+    """
+    large_w, large_h = slide.dimensions
+    new_w = math.floor(large_w / SCALE_FACTOR)
+    new_h = math.floor(large_h / SCALE_FACTOR)
+    level = slide.get_best_level_for_downsample(SCALE_FACTOR)
+    whole_slide_image = slide.read_region((0, 0), level, slide.level_dimensions[level])
+    whole_slide_image = whole_slide_image.convert("RGB")
+    img = whole_slide_image.resize((new_w, new_h), PIL.Image.BILINEAR)
+    return img, (large_w, large_h, new_w, new_h)

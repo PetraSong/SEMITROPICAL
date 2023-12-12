@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+
 print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 print("                                         Main Modeling")
 print("")
@@ -14,8 +16,6 @@ print("")
 print("                     [1] https://github.com/MaryamHaghighat/PathProfiler")
 print("")
 print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-
-from __future__ import print_function
 
 import argparse
 import pdb

@@ -193,10 +193,17 @@ if __name__ == "__main__":
     else:
         if args.verbose:
             print("VERBOSE <<>> Checking existence of slides in directory [", args.slide_folder, "]", flush=True)
-        image_folder = os.path.join(args.slide_folder, '_images')
-        if args.verbose:
-            print("VERBOSE <<>> Image folder:", image_folder)
-        files = glob.glob(os.path.join(args.slide_folder, '_images/*.TIF')) + glob.glob(os.path.join(args.slide_folder, '_images/*.ndpi'))
+        files = []
+        if os.path.exists(os.path.join(args.slide_folder, '_ndpi')):
+            if args.verbose: print('VERBOSE <<>> _ndpi found')
+            files += glob.glob(os.path.join(args.slide_folder, '_ndpi/*.ndpi'))
+        if os.path.exists(os.path.join(args.slide_folder, '_tif')):
+            if args.verbose: print('VERBOSE <<>> _tif found')
+            files += glob.glob(os.path.join(args.slide_folder, '_tif/*.TIF'))
+        # image_folder = os.path.join(args.slide_folder, '_images')
+        # if args.verbose:
+        #     print("VERBOSE <<>> Image folder:", image_folder)
+        # files = glob.glob(os.path.join(args.slide_folder, '_images/*.TIF')) + glob.glob(os.path.join(args.slide_folder, '_images/*.ndpi'))
         if args.verbose:
             print("VERBOSE <<>> Files found:", files)
 

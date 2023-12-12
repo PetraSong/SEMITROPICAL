@@ -205,7 +205,7 @@ def train(datasets, cur, args):
         if args.model_type in ['clam_sb', 'clam_mb'] and not args.no_inst_cluster:
             # Train loop for CLAM
             train_loop_clam(epoch, model, train_loader, optimizer, args.n_classes, args.bag_weight, writer, loss_fn)
-            stop = validate_clam(cur, epoch, model, val_loader, args.n_classes, 
+            stop, val_loss= validate_clam(cur, epoch, model, val_loader, args.n_classes, 
                 early_stopping, writer, loss_fn, args.results_dir)
 
         else:
@@ -547,9 +547,9 @@ def validate_clam(cur, epoch, model, loader, n_classes, early_stopping = None, w
         
         if early_stopping.early_stop:
             print("Early stopping")
-            return True
+            return True, val_loss
 
-    return False
+    return False, val_loss
 
 def summary(model, loader, n_classes):
     device=torch.device("cuda" if torch.cuda.is_available() else "cpu")
