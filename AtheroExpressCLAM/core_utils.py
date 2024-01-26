@@ -195,8 +195,10 @@ def train(datasets, cur, args):
     else:
         early_stopping = None
     print('Done!', flush=True)
-    loss_fn = nn.CrossEntropyLoss()
-    print('Setting Cross Entropy Loss...', flush=True)
+    loss_fn = nn.BCEloss()
+    print('Setting weighted BCE loss...', flush=True)
+    # loss_fn = nn.CrossEntropyLoss()
+    # print('Setting Cross Entropy Loss...', flush=True)
     
 
 
@@ -351,7 +353,7 @@ def train_loop(epoch, model, loader, optimizer, n_classes, writer = None, loss_f
         
         train_loss += loss_value
         if (batch_idx + 1) % 20 == 0:
-            print('batch {}, loss: {:.4f}, label: {}, bag_size: {}'.format(batch_idx, loss_value, label.item(), data.size(0)), flush=True)
+            print('batch {}, loss: {:.4f}, label: {}, bag_size: {}, Y_prob: {}'.format(batch_idx, loss_value, label.item(), data.size(0), Y_prob[0]), flush=True)
            
         error = calculate_error(Y_hat, label)
         train_error += error
