@@ -219,7 +219,7 @@ elif args.task == 'wsi_classification':
 
 elif args.task == 'wsi_classification_binary':
     args.n_classes = 2
-    dataset = Generic_MIL_Dataset(csv_path=args.csv_dataset, # './dataset_csv/AtheroExpress_FSMA_WSI_dataset_binary_IPH.csv',
+    dataset = Generic_MIL_Dataset(csv_path=args.csv_dataset, # './dataset_csv/AtheroExpress_SMA_WSI_dataset_binary_IPH.csv',
                                             data_dir=os.path.join(args.data_root_dir, ''),
                                             shuffle=False,
                                             seed=args.seed,
