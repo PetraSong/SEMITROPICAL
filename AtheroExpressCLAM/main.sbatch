@@ -10,7 +10,7 @@
 #SBATCH --mem=32G # set the memory limit
 #SBATCH --mail-type=ALL # select which email types will be sent (BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=your_email@domain.com # set destination email
-'# --gres=gpu:1'
+'# --gres=gpu:1
 
 echo '----------------------------'
 echo ' JOB ID: '$SLURM_ARRAY_JOB_ID
@@ -27,14 +27,14 @@ eval "$(conda shell.bash hook)"
 conda activate /hpc/local/Rocky8/dhl_ec/software/mambaforge3/envs/convocals
 # conda activate convocals
 
-CSV_INPUT_DATA="/hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/AtheroexpressCLAM/20231004.CONVOCALS.samplelist.withSMAslides.csv"
-CSV_DATA="/hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/AtheroexpressCLAM/dataset_csv/AtheroExpress_EVG_WSI_dataset_binary_IPH.csv"
-CSV_DATA_BAL="/hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/AtheroexpressCLAM/dataset_csv/AtheroExpress_EVG_WSI_dataset_binary_IPH_eq.csv"
-H5_DIR="/hpc/dhl_ec/VirtualSlides/EVG/_images/PROCESSED/features_512"
+CSV_INPUT_DATA="/hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/AtheroExpressCLAM/20231004.CONVOCALS.samplelist.withSMAslides.csv"
+CSV_DATA="/hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/AtheroExpressCLAM/dataset_csv/AtheroExpress_EVG_WSI_dataset_binary_IPH.csv"
+CSV_DATA_BAL="/hpc/dhl_ec/VirtualSlides/Projects/CONVOCALS/AtheroExpressCLAM/dataset_csv/AtheroExpress_EVG_WSI_dataset_binary_IPH_eq.csv"
+H5_DIR="/hpc/dhl_ec/VirtualSlides/EVG/_images/PROCESSED/features_512/h5_files"
 CLASSIFIER="IPH.bin"
 
 DATA_DIR="/hpc/dhl_ec/VirtualSlides/SMA/features_512"
-SPLIT_DIR="/hpc/dhl_ec/VirtualSlides/SMA/scripts/CONVOCALS-master/AtheroexpressCLAM/splits_SMA_IPH/wsi_classification_binary_eq_100_k10"
+SPLIT_DIR="/hpc/dhl_ec/VirtualSlides/SMA/scripts/CONVOCALS-master/AtheroExpressCLAM/splits_SMA_IPH/wsi_classification_binary_eq_100_k10"
 
 # === Create CSV dataset === #
 # we create the csv dataset for the classification task

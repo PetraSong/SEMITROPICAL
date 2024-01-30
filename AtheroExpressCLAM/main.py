@@ -238,7 +238,7 @@ elif args.task == 'wsi_classification_binary_eq':
                                             print_info=True,
                                             label_dict = {'no':0, 'yes':1},
                                             patient_strat=False,
-					    apply_bag_augmentation = args.apply_bag_augmentation,
+					                        apply_bag_augmentation = args.apply_bag_augmentation,
                                             ignore=[])
 
 
