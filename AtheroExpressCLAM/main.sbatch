@@ -10,7 +10,7 @@
 #SBATCH --mem=32G # set the memory limit
 #SBATCH --mail-type=ALL # select which email types will be sent (BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=your_email@domain.com # set destination email
-'# --gres=gpu:1
+# --gres=gpu:1
 
 echo '----------------------------'
 echo ' JOB ID: '$SLURM_ARRAY_JOB_ID
