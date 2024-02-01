@@ -36,6 +36,8 @@ CLASSIFIER="IPH.bin"
 DATA_DIR="/hpc/dhl_ec/VirtualSlides/SMA/features_512"
 SPLIT_DIR="/hpc/dhl_ec/VirtualSlides/SMA/scripts/CONVOCALS-master/AtheroExpressCLAM/splits_SMA_IPH/wsi_classification_binary_eq_100_k10"
 
+RESULTS_DIR="./results"
+
 # === Create CSV dataset === #
 # we create the csv dataset for the classification task
 
@@ -49,7 +51,7 @@ python generate_label.py --csv_input $CSV_INPUT_DATA \
 # We create splits for the classification task
 # so the validation, training and test sets
 
-# python create_splits_seq.py --task wsi_classification_binary_eq --csv_dataset $CSV_DATA_BAL --k 10
+# python create_splits_seq.py --task wsi_classification_binary --csv_dataset $CSV_DATA_BAL --k 10
 
 # === Train the model === #
 # here we train the model
@@ -61,10 +63,11 @@ python generate_label.py --csv_input $CSV_INPUT_DATA \
 # --k 10 \
 # --label_frac 1.0 \
 # --exp_code EVG_IPH_classification_binary_inst_k10_balanced \
+# --results_dir $RESULTS_DIR \
 # --model_size imagenet \
 # --bag_loss ce \
 # --task wsi_classification_binary_eq \
-# --model_type clam_mb \
+# --model_type clam_sb \
 # --log_data \
 # --subtyping \
 # --data_root_dir $DATA_DIR \
