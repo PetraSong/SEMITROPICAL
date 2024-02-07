@@ -21,7 +21,7 @@ parser = argparse.ArgumentParser(description='Configurations for Heatmap Creatio
 # data_root_dir => see files organization in README.md
 parser.add_argument('--model_type', type=str, choices=['clam_sb', 'clam_mb', 'mil'], default='clam_mb', 
                     help='type of model (default: clam_sb, clam w/ single attention branch)')
-parser.add_argument('--model_size', type=str, choices=['small', 'big', 'dino_version, imagenet'], default='imagenet', help='size of model, does not affect mil')
+parser.add_argument('--model_size', type=str, choices=['small', 'big', 'dino_version', 'imagenet'], default='imagenet', help='size of model, does not affect mil')
 parser.add_argument('--task', type=str, choices=['task_1_tumor_vs_normal',  'task_2_tumor_subtyping', 'wsi_classification', 'wsi_classification_binary', 'wsi_classification_binary_symptoms'], default='wsi_classification_binary')
 parser.add_argument('--subtyping', action='store_true', default=True, 
                      help='subtyping problem')
