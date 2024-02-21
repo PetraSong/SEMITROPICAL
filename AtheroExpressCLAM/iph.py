@@ -112,6 +112,8 @@ def compute_iph(case_id, filename, out_df):
         arr_min = np.min(logits[mask >= 1])
         arr_max = np.max(logits[mask >= 1])
         arr = (logits - arr_min) / (arr_max - arr_min)
+
+        np.save(f'{args.out_dir}{case_id}_arr.npy', arr)
         # Convert the logits array into heatmap
         cmap = plt.get_cmap('coolwarm')
         rgba = cmap(arr, bytes=True)
