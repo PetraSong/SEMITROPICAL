@@ -191,8 +191,8 @@ class CLAM_SB(nn.Module):
         # The attention net takes as input the patch features h [K, 1024] - where K is the number of patches - and outputs
         # a [K,1] tensor A containing the attention score per each patch and the features [K, 512] reduced by the fc
         # layers
-        A, h = self.attention_net(h)  # NxK
-        A = torch.transpose(A, 1, 0)  # KxN
+        A, h = self.attention_net(h)  # KxN
+        A = torch.transpose(A, 1, 0)  # NxK
         if attention_only:
             return A
         A_raw = A
@@ -237,13 +237,17 @@ class CLAM_SB(nn.Module):
         # multiply the reduced features (512-dim) with the attention scores => result: (1, K) * (K,512) => (1, 512)
         M = torch.mm(A, h)
         # M is the slide-level embedding
+        patch_wise_scores = self.classifiers(m)
+        logits = sum(patch_wise_scores)
+        Y_prob = F.sigmoid(logits)
+        Y_hat = (Y_prob >= 0.5).float()
 
         # logits (1, 512) => (1, N_CLASSES)
-        logits = self.classifiers(M)
+        # logits = self.classifiers(M)
         # Y_hat: index of the largest logit
-        Y_hat = torch.topk(logits, 1, dim = 1)[1]
+        #Y_hat = torch.topk(logits, 1, dim = 1)[1]
         # Y_prob: normalization of logits
-        Y_prob = torch.sigmoid(logits)
+        #Y_prob = torch.sigmoid(logits)
         # Instance clustering
         if instance_eval:
             results_dict = {'instance_loss': total_inst_loss, 'inst_labels': np.array(all_targets), 
